@@ -15,15 +15,11 @@ class View
 
     public function __toString()
     {
+        $this->escape();
         return $this->value;
     }
 
-    /**
-     * Escapes the value of the View object.
-     * If the value is already a View object, it returns the object itself without escaping.
-     * This method is idempotent, meaning that calling it multiple times will not change the result after the first call.
-     */
-    public function escape()
+    protected function escape()
     {
         if ($this->is_escaped)
         {
@@ -59,9 +55,10 @@ class View
         return $this;
     }
 
-    private function defaultEscapeFunction($value)
+    protected function defaultEscapeFunction($value)
     {
-        return htmlspecialchars(@strval($value), ENT_COMPAT, 'UTF-8');
+        // return htmlspecialchars(@strval($value), ENT_COMPAT, 'UTF-8');
+        return htmlspecialchars(@strval($value), encoding: 'UTF-8');
     }
 
 
