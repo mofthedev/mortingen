@@ -15,11 +15,10 @@ class View
 
     public function __toString()
     {
-        $this->escape();
         return $this->value;
     }
 
-    protected function escape()
+    public function escape()
     {
         if ($this->is_escaped)
         {

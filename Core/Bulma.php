@@ -2,10 +2,10 @@
 
 class Bulma
 {
-    public static function Html($content, $title = "Mortingen Framework") : ViewSafe
+    public static function Html($content, $title = "Mortingen Framework") : View
     {
-        $content = new View($content);
-        $title = new View($title);
+        $content = (new View($content))->escape();
+        $title = (new View($title))->escape();
 
         $baseHtml = "<!DOCTYPE html>
 <html lang=\"en\">
@@ -20,28 +20,28 @@ class Bulma
 </body>
 </html>";
 
-        return new ViewSafe($baseHtml);
+        return new View($baseHtml);
     }
 
-    public static function Container($content) : ViewSafe
+    public static function Container($content) : View
     {
-        $content = new View($content);
-
-        return new ViewSafe("<div class=\"".BulmaClass::Container."\">".$content."</div>");
+        $content = (new View($content))->escape();
+        
+        return new View("<div class=\"".BulmaClass::Container."\">".$content."</div>");
     }
 
-    public static function Section($content) : ViewSafe
+    public static function Section($content) : View
     {
-        $content = new View($content);
+        $content = (new View($content))->escape();
 
-        return new ViewSafe("<section class=\"".BulmaClass::Section."\">".$content."</section>");
+        return new View("<section class=\"".BulmaClass::Section."\">".$content."</section>");
     }
 
-    public static function Box($text, $class="") : ViewSafe
+    public static function Box($text, $class="") : View
     {
-        $text = new View($text);
-        $class = new ViewSafe($class);
+        $text = (new View($text))->escape();
+        $class = (new View($class))->escape();
 
-        return new ViewSafe("<div class=\"".BulmaClass::Box." ".$class."\">".$text."</div>");
+        return new View("<div class=\"".BulmaClass::Box." ".$class."\">".$text."</div>");
     }
 }
