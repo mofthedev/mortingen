@@ -4,10 +4,11 @@ class View
 {
 
     /**
-     * @var callable|string|null
+     * @var callable|string
      */
-    public $escape_function = "defaultEscapeFunction";
-        
+    private $escape_function = "defaultEscapeFunction";
+    protected bool $is_escaped = false;
+
     public function __construct(protected mixed $value)
     {
     }
@@ -17,8 +18,19 @@ class View
         return $this->value;
     }
 
+    /**
+     * Escapes the value of the View object.
+     * If the value is already a View object, it returns the object itself without escaping.
+     * This method is idempotent, meaning that calling it multiple times will not change the result after the first call.
+     */
     public function escape()
     {
+        if ($this->is_escaped)
+        {
+            return $this; // Already escaped, return the object
+        }
+        $this->is_escaped = true; // Mark as escaped
+
         if ($this->value instanceof View)
         {
             return $this; // Return the value without escaping
@@ -39,6 +51,12 @@ class View
             }
             return $this;
         }
+    }
+
+    public function setEscapeFunction(callable|string $escape_function)
+    {
+        $this->escape_function = $escape_function;
+        return $this;
     }
 
     private function defaultEscapeFunction($value)
