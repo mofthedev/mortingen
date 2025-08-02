@@ -60,5 +60,14 @@ class View
         return htmlspecialchars(@strval($value), encoding: 'UTF-8');
     }
 
+    public static function concat(...$views)
+    {
+        $result = '';
+        foreach ($views as $view)
+        {
+            $result .= (string)$view . PHP_EOL;
+        }
+        return new self($result);
+    }
 
 }
