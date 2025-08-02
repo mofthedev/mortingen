@@ -29,9 +29,17 @@ class HTML
         $attributes = $arguments[1] ?? [];
         $attributesString = static::buildAttributes($attributes);
 
+        $prefix = '';
+        $postfix = '';
+        if ($content instanceof View)
+        {
+            $prefix = PHP_EOL;
+            $postfix = PHP_EOL;
+        }
+
         $content = (new View($content))->escape();
 
-        return new View("<{$name}{$attributesString}>{$content}</{$name}>");
+        return new View("<{$name}{$attributesString}>".$prefix."{$content}".$postfix."</{$name}>");
     }
 
     /**
@@ -77,6 +85,19 @@ class HTML
     }
 
     // --- Defined methods for HTML Void Elements ---
+
+    public static function css(string $href, array $attributes = []): View
+    {
+        $attributes['rel'] = 'stylesheet';
+        $attributes['href'] = $href;
+        return new View(static::link($attributes));
+    }
+
+    public static function js(string $src, array $attributes = []): View
+    {
+        $attributes['src'] = $src;
+        return new View(static::script($attributes));
+    }
 
     public static function area(array $attributes = []): View { return static::createVoidElement('area', $attributes); }
     public static function base(array $attributes = []): View { return static::createVoidElement('base', $attributes); }

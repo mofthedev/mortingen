@@ -65,7 +65,7 @@ class View
         $result = '';
         foreach ($views as $view)
         {
-            $result .= (string)$view . PHP_EOL;
+            $result .= (string)$view;
         }
         return new self($result);
     }
