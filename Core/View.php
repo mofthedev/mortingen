@@ -65,7 +65,7 @@ class View
         $result = '';
         foreach ($views as $view)
         {
-            $result .= (string)$view;
+            $result .= ((new View($view))->escape());
         }
         return new self($result);
     }

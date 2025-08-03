@@ -2,6 +2,39 @@
 
 class Bulma
 {
+    protected static $prepend_head = [];
+    protected static $append_head = [];
+    protected static $prepend_body = [];
+    protected static $append_body = [];
+
+    public static function prependHead($content)
+    {
+        $content = (new View($content))->escape();
+        // Add the content to the beginning of the $prepend_head array
+        array_unshift(static::$prepend_head, $content);
+    }
+
+    public static function appendHead($content)
+    {
+        $content = (new View($content))->escape();
+        // Add the content to the end of the $append_head array
+        static::$append_head[] = $content;
+    }
+
+    public static function prependBody($content)
+    {
+        $content = (new View($content))->escape();
+        // Add the content to the beginning of the $prepend_body array
+        array_unshift(static::$prepend_body, $content);
+    }
+
+    public static function appendBody($content)
+    {
+        $content = (new View($content))->escape();
+        // Add the content to the end of the $append_body array
+        static::$append_body[] = $content;
+    }
+
     public static function Html($content, $title = "Mortingen Framework") : View
     {
         $content = (new View($content))->escape();
@@ -13,28 +46,19 @@ class Bulma
                             HTML::head(
                                 // It is required to use View::concat(...) to concatenate consecutive View objects or strings.
                                 View::concat(
+                                    View::concat(...static::$prepend_head) ,
                                     HTML::meta(["charset" => "UTF-8"]) ,
                                     HTML::meta(["name" => "viewport", "content" => "width=device-width, initial-scale=1.0"]) ,
                                     HTML::title($title) ,
-                                    HTML::css(App::getURIRoot()."/Public/bulma/css/bulma.min.css")
+                                    HTML::css(App::getURIRoot()."/Public/bulma/css/bulma.min.css") ,
+                                    View::concat(...static::$append_head)
                                 )
                             ) ,
-                            HTML::body(
-                                static::Container(
-                                    static::Section($content)
-                                )
-                            )
+                            HTML::body($content)
                         )
                     );
 
         return new View($baseHtml);
-    }
-
-    public static function Container($content) : View
-    {
-        $content = (new View($content))->escape();
-
-        return new View(HTML::div($content, ["class" => BulmaClass::Container]));
     }
 
     public static function Section($content) : View
@@ -44,15 +68,47 @@ class Bulma
         return new View(HTML::section($content, ["class" => BulmaClass::Section]));
     }
 
-    
-    public static function Box($text, array $classes=[]) : View
+    public static function Container($content, array $classes=[]) : View
     {
-        $text = (new View($text))->escape();
+        $content = (new View($content))->escape();
+
+        array_unshift($classes, BulmaClass::Container);
+        $class = implode(" ", $classes);
+        $class = (new View($class))->escape();
+
+        return new View(HTML::div($content, ["class" => $class]));
+    }
+
+    public static function Cols($content, array $classes=[]) : View
+    {
+        $content = (new View($content))->escape();
+
+        array_unshift($classes, BulmaClass::Columns);
+        $class = implode(" ", $classes);
+        $class = (new View($class))->escape();
+
+        return new View(HTML::div($content, ["class" => $class]));
+    }
+
+    public static function Col($content, array $classes=[]) : View
+    {
+        $content = (new View($content))->escape();
+
+        array_unshift($classes, BulmaClass::Column);
+        $class = implode(" ", $classes);
+        $class = (new View($class))->escape();
+
+        return new View(HTML::div($content, ["class" => $class]));
+    }
+    
+    public static function Box($content, array $classes=[]) : View
+    {
+        $content = (new View($content))->escape();
 
         array_unshift($classes, BulmaClass::Box);
         $class = implode(" ", $classes);
         $class = (new View($class))->escape();
 
-        return new View(HTML::div($text, ["class" => $class]));
+        return new View(HTML::div($content, ["class" => $class]));
     }
 }

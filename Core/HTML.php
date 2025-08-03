@@ -29,17 +29,9 @@ class HTML
         $attributes = $arguments[1] ?? [];
         $attributesString = static::buildAttributes($attributes);
 
-        $prefix = '';
-        $postfix = '';
-        if ($content instanceof View)
-        {
-            $prefix = PHP_EOL;
-            $postfix = PHP_EOL;
-        }
-
         $content = (new View($content))->escape();
 
-        return new View("<{$name}{$attributesString}>".$prefix."{$content}".$postfix."</{$name}>");
+        return new View("<{$name}{$attributesString}>".$content."</{$name}>".PHP_EOL);
     }
 
     /**
@@ -81,7 +73,7 @@ class HTML
         // Using static:: ensures that if a child class overrides buildAttributes,
         // that new version is called here.
         $attributesString = static::buildAttributes($attributes);
-        return new View("<{$tag}{$attributesString}>");
+        return new View("<{$tag}{$attributesString}>".PHP_EOL);
     }
 
     // --- Defined methods for HTML Void Elements ---
