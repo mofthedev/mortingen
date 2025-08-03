@@ -52,10 +52,37 @@ class Index extends Controller
 
     public function bulma()
     {
-        $this->response->addContent( 
-            Bulma::Html(
-                Bulma::Box("this is a box. <b>This sentence is escaped.</b>", "noclass"), "Bulma Test in Mortingen Framework"
-            )
+        Bulma::appendHead(
+            \HTML::css(App::getURIRoot()."/Public/custom.css")
+        );
+
+        $left_content = Bulma::Box("This is a box on the left side.", ["has-background-success-light", "has-text-weight-bold", "has-text-danger-dark"]);
+
+        $main_content = Bulma::Box(Bulma::Box("This is a box in another box. <b>This sentence is escaped.</b>", ["has-background-info", "has-text-weight-bold", "has-text-success-dark"]),
+            ["has-background-link-light"]
+        );
+
+        $right_content = Bulma::Box("This is a box on the right side.", ["has-background-danger-light", "has-text-weight-bold", "has-text-info-dark"]);
+
+        $this->response->addContent($this->layout3Cols($left_content, $main_content, $right_content));
+    }
+
+    private function layout3Cols($col1, $col2, $col3)
+    {
+        return Bulma::Html(
+            Bulma::Section(
+                Bulma::Container(
+                    Bulma::Cols(
+                        \View::concat(
+                            Bulma::Col($col1, [\BulmaClass::Is3]),
+                            Bulma::Col($col2, [\BulmaClass::Is6]),
+                            Bulma::Col($col3, [\BulmaClass::Is3])
+                        )
+                    ) ,
+                    [\BulmaClass::IsFluid]
+                )
+            ),
+            "Bulma Test in Mortingen Framework"
         );
     }
 }
