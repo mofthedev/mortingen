@@ -608,4 +608,5 @@ abstract class BulmaClass // "BulmaClass" adında soyut (abstract) bir sınıf t
     public const ML_AUTO = "ml-auto";
     public const MR_AUTO = "mr-auto";
 
-} // Sınıf tanımının bittiği yer.
+} // Sınıf tanımının bittiği yer. 
+//=                     

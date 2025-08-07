@@ -6,6 +6,7 @@
  * Amacı: Bulma CSS Framework'ü için programatik olarak HTML bileşenleri oluşturan yardımcı sınıf.
  * Faydası: Güvenli, okunabilir ve yönetilebilir bir şekilde Bulma arayüzleri inşa etmeyi sağlar.
  */
+// 
 class Bulma 
 { // Sınıf tanımının başladığı yer.
     // --- Sayfa Başına ve Sonuna İçerik Eklemek İçin Kullanılan Diziler ---
