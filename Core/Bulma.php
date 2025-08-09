@@ -65,14 +65,14 @@ class Bulma
     {
         $content = (new View($content))->escape();
 
-        return new View(HTML::section($content, ["class" => BulmaClass::Section]));
+        return new View(HTML::section($content, ["class" => BulmaClass::SECTION]));
     }
 
     public static function Container($content, array $classes=[]) : View
     {
         $content = (new View($content))->escape();
 
-        array_unshift($classes, BulmaClass::Container);
+        array_unshift($classes, BulmaClass::CONTAINER);
         $class = implode(" ", $classes);
         $class = (new View($class))->escape();
 
@@ -83,7 +83,7 @@ class Bulma
     {
         $content = (new View($content))->escape();
 
-        array_unshift($classes, BulmaClass::Columns);
+        array_unshift($classes, BulmaClass::COLUMNS);
         $class = implode(" ", $classes);
         $class = (new View($class))->escape();
 
@@ -94,7 +94,7 @@ class Bulma
     {
         $content = (new View($content))->escape();
 
-        array_unshift($classes, BulmaClass::Column);
+        array_unshift($classes, BulmaClass::COLUMN);
         $class = implode(" ", $classes);
         $class = (new View($class))->escape();
 
@@ -105,7 +105,7 @@ class Bulma
     {
         $content = (new View($content))->escape();
 
-        array_unshift($classes, BulmaClass::Box);
+        array_unshift($classes, BulmaClass::BOX);
         $class = implode(" ", $classes);
         $class = (new View($class))->escape();
 
