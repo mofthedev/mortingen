@@ -527,4 +527,5 @@ abstract class BulmaClass
     public const HAS_SKELETON = "has-skeleton";
     public const SKELETON_BLOCK = "skeleton-block";
     public const SKELETON_LINES = "skeleton-lines";
+    
 }
