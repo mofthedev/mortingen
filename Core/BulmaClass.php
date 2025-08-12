@@ -57,6 +57,17 @@ abstract class BulmaClass
     public const TITLE = "title";
     public const SUBTITLE = "subtitle";
 
+    //Elements Sizes
+    public const IS_16X16 = "is-16x16";
+    public const IS_24X24 = "is-24x24";
+    public const IS_32X32 = "is-32x32";
+    public const IS_48X48 = "is-48x48";
+    public const IS_64X64 = "is-64x64";
+    public const IS_96X96 = "is-96x96";
+    public const IS_128X128 = "is-128x128";
+    public const IS_256X256 = "is-256x256";
+    public const IS_512X512 = "is-512x512";
+
     // Components
     public const BREADCRUMB = "breadcrumb";
     public const BUTTONS = "buttons";
@@ -111,6 +122,7 @@ abstract class BulmaClass
     public const PANEL_TABS = "panel-tabs";
     public const PANEL_ICON = "panel-icon";
     public const TABS = "tabs";
+    public const HAS_DROPDOWN = "has-dropdown";
 
     // Modifiers
     // General Style & State
@@ -150,6 +162,9 @@ abstract class BulmaClass
     public const IS_UP = "is-up";
     public const IS_WARNING = "is-warning";
     public const IS_WHITE = "is-white";
+    public const IS_OUTLINED = "is-outlined";
+    public const IS_LEFT = "is-left"; 
+    public const IS_BOXED = "is-boxed";
 
     // Layout & Structure
     public const IS_ANCESTOR = "is-ancestor";
