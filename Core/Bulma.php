@@ -1,584 +1,732 @@
-<?php 
+<?php
 
-/**
- * Bu blok, sınıf hakkında genel bilgi veren bir dokümantasyon yorumudur (DocBlock).
- * Sınıfın adı: Bulma
- * Amacı: Bulma CSS Framework'ü için programatik olarak HTML bileşenleri oluşturan yardımcı sınıf.
- * Faydası: Güvenli, okunabilir ve yönetilebilir bir şekilde Bulma arayüzleri inşa etmeyi sağlar.
- */
-// 
-class Bulma 
-{ // Sınıf tanımının başladığı yer.
-    // --- Sayfa Başına ve Sonuna İçerik Eklemek İçin Kullanılan Diziler ---
-
-    // HTML <head> etiketinin en başına eklenecek içerikleri tutan korumalı (protected) ve statik bir dizi.
+class Bulma
+{
     protected static $prepend_head = [];
-    // HTML <head> etiketinin en sonuna eklenecek içerikleri tutan korumalı ve statik bir dizi.
     protected static $append_head = [];
-    // HTML <body> etiketinin en başına eklenecek içerikleri tutan korumalı ve statik bir dizi.
     protected static $prepend_body = [];
-    // HTML <body> etiketinin en sonuna eklenecek içerikleri tutan korumalı ve statik bir dizi.
     protected static $append_body = [];
 
-    // --- İçerik Ekleme Fonksiyonları ---
+    public static function prependHead($content)
+    {
+        $content = (new View($content))->escape();
+        // Add the content to the beginning of the $prepend_head array
+        array_unshift(static::$prepend_head, $content);
+    }
 
-    /**
-     * <head> etiketinin başına içerik ekler.
-     * @param mixed $content Eklenecek içerik (string veya View nesnesi).
-     */
-    public static function prependHead($content) // Her yerden erişilebilen (public) ve statik bir fonksiyon tanımlar.
-    { // Fonksiyonun başlangıcı.
-        $content = (new View($content))->escape(); // Gelen içeriği güvenlik için View nesnesiyle escape eder.
-        array_unshift(static::$prepend_head, $content); // Escape edilmiş içeriği $prepend_head dizisinin başına ekler.
-    } // Fonksiyonun sonu.
-
-    /**
-     * <head> etiketinin sonuna içerik ekler.
-     * @param mixed $content Eklenecek içerik.
-     */
     public static function appendHead($content)
     {
-        $content = (new View($content))->escape(); // İçeriği güvenli hale getirir.
-        static::$append_head[] = $content; // Güvenli içeriği $append_head dizisinin sonuna ekler.
+        $content = (new View($content))->escape();
+        // Add the content to the end of the $append_head array
+        static::$append_head[] = $content;
     }
 
-    /**
-     * <body> etiketinin başına içerik ekler.
-     * @param mixed $content Eklenecek içerik.
-     */
     public static function prependBody($content)
     {
-        $content = (new View($content))->escape(); // İçeriği güvenli hale getirir.
-        array_unshift(static::$prepend_body, $content); // Güvenli içeriği $prepend_body dizisinin başına ekler.
+        $content = (new View($content))->escape();
+        // Add the content to the beginning of the $prepend_body array
+        array_unshift(static::$prepend_body, $content);
     }
 
-    /**
-     * <body> etiketinin sonuna içerik ekler.
-     * @param mixed $content Eklenecek içerik.
-     */
     public static function appendBody($content)
     {
-        $content = (new View($content))->escape(); // İçeriği güvenli hale getirir.
-        static::$append_body[] = $content; // Güvenli içeriği $append_body dizisinin sonuna ekler.
+        $content = (new View($content))->escape();
+        // Add the content to the end of the $append_body array
+        static::$append_body[] = $content;
     }
 
-    //================================================================
-    // TEMEL LAYOUT (YERLEŞİM) FONKSİYONLARI
-    //================================================================
-
-    /**
-     * Tam bir HTML sayfası oluşturur.
-     * @param View|string $content Sayfanın ana içeriği.
-     * @param string $title Sayfa başlığı.
-     * @return View Oluşturulan tam HTML sayfasını içeren bir View nesnesi döndürür.
-     */
     public static function Html($content, $title = "Mortingen Framework") : View
     {
-        // $content genellikle diğer fonksiyonlardan gelen bir View nesnesi olduğu için tekrar escape edilmez.
-        $title = (new View($title))->escape(); // Sayfa başlığını güvenlik için escape eder.
+        $content = (new View($content))->escape();
+        $title = (new View($title))->escape();
 
-        // Temel HTML yapısını oluşturur.
-        $baseHtml = "<!DOCTYPE html>". PHP_EOL . // HTML5 belge tipini ve yeni satır karakterini ekler.
-                    HTML::html( // HTML::html() ile <html> etiketini oluşturur.
-                        View::concat( // Birden fazla View nesnesini birleştirmek için kullanılır.
-                            HTML::head( // HTML::head() ile <head> etiketini oluşturur.
+        $baseHtml = "<!DOCTYPE html>". PHP_EOL .
+                    HTML::html(
+                        View::concat(
+                            HTML::head(
+                                // It is required to use View::concat(...) to concatenate consecutive View objects or strings.
                                 View::concat(
-                                    View::concat(...static::$prepend_head), // Başa eklenecek head içeriklerini ekler.
-                                    HTML::meta(["charset" => "UTF-8"]), // Karakter setini UTF-8 olarak ayarlar.
-                                    HTML::meta(["name" => "viewport", "content" => "width=device-width, initial-scale=1.0"]), // Mobil uyumluluk için viewport ayarı.
-                                    HTML::title($title), // Sayfa başlığını ekler.
-                                    HTML::css(App::getURIRoot()."/Public/bulma/css/bulma.min.css"), // Proje yolundan Bulma CSS dosyasını ekler.
-                                    View::concat(...static::$append_head) // Sona eklenecek head içeriklerini ekler.
+                                    View::concat(...static::$prepend_head) ,
+                                    HTML::meta(["charset" => "UTF-8"]) ,
+                                    HTML::meta(["name" => "viewport", "content" => "width=device-width, initial-scale=1.0"]) ,
+                                    HTML::title($title) ,
+                                    HTML::css(App::getURIRoot()."/Public/bulma/css/bulma.min.css") ,
+                                    View::concat(...static::$append_head)
                                 )
-                            ),
-                            HTML::body( // HTML::body() ile <body> etiketini oluşturur.
-                                View::concat(
-                                    View::concat(...static::$prepend_body), // Başa eklenecek body içeriklerini ekler.
-                                    $content, // Sayfanın ana içeriğini yerleştirir.
-                                    View::concat(...static::$append_body) // Sona eklenecek body içeriklerini ekler.
-                                )
-                            )
+                            ) ,
+                            HTML::body($content)
                         )
                     );
 
-        return new View($baseHtml); // Oluşturulan HTML metnini bir View nesnesi olarak döndürür.
+        return new View($baseHtml);
     }
 
-    /**
-     * Bir <section> elementi oluşturur.
-     * @param View|string $content Section içeriği.
-     * @param array $classes Eklenecek ekstra CSS sınıfları.
-     * @return View Oluşturulan section elementini içeren bir View nesnesi.
-     */
-    public static function Section($content, array $classes=[]) : View
+    public static function Section($content) : View
     {
-        $content = (new View($content))->escape(); // İçeriği güvenli hale getirir.
-        array_unshift($classes, BulmaClass::Section); // Sınıf listesinin başına temel "section" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıf dizisini birleştirerek tek bir string oluşturur.
-        return new View(HTML::section($content, ["class" => $class])); // HTML yardımcısı ile section oluşturup View olarak döndürür.
+        $content = (new View($content))->escape();
+
+        return new View(HTML::section($content, ["class" => BulmaClass::SECTION]));
     }
 
-    /**
-     * Bir container <div> elementi oluşturur.
-     * @param View|string $content Container içeriği.
-     * @param array $classes Eklenecek ekstra CSS sınıfları.
-     * @return View Oluşturulan container elementini içeren bir View nesnesi.
-     */
     public static function Container($content, array $classes=[]) : View
     {
-        $content = (new View($content))->escape(); // İçeriği güvenli hale getirir.
-        array_unshift($classes, BulmaClass::Container); // Sınıf listesinin başına temel "container" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::div($content, ["class" => $class])); // HTML yardımcısı ile div oluşturup View olarak döndürür.
+        $content = (new View($content))->escape();
+
+        array_unshift($classes, BulmaClass::CONTAINER);
+        $class = implode(" ", $classes);
+        $class = (new View($class))->escape();
+
+        return new View(HTML::div($content, ["class" => $class]));
     }
 
-    /**
-     * Bir "columns" <div> sarmalayıcısı oluşturur.
-     * @param View|string $content Sütunları içeren içerik.
-     * @param array $classes Eklenecek ekstra CSS sınıfları.
-     * @return View Oluşturulan columns sarmalayıcısını içeren bir View nesnesi.
-     */
     public static function Cols($content, array $classes=[]) : View
     {
-        // İçerik genellikle Col() fonksiyonlarından gelen View nesneleri olduğu için escape edilmez.
-        array_unshift($classes, BulmaClass::Columns); // Sınıf listesinin başına "columns" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::div($content, ["class" => $class])); // HTML yardımcısı ile div oluşturur.
+        $content = (new View($content))->escape();
+
+        array_unshift($classes, BulmaClass::COLUMNS);
+        $class = implode(" ", $classes);
+        $class = (new View($class))->escape();
+
+        return new View(HTML::div($content, ["class" => $class]));
     }
 
-    /**
-     * Tek bir "column" <div> elementi oluşturur.
-     * @param View|string $content Sütun içeriği.
-     * @param array $classes Eklenecek ekstra CSS sınıfları.
-     * @return View Oluşturulan column elementini içeren bir View nesnesi.
-     */
     public static function Col($content, array $classes=[]) : View
     {
-        $content = (new View($content))->escape(); // Sütun içeriğini güvenli hale getirir.
-        array_unshift($classes, BulmaClass::Column); // Sınıf listesinin başına "column" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::div($content, ["class" => $class])); // HTML yardımcısı ile div oluşturur.
+        $content = (new View($content))->escape();
+
+        array_unshift($classes, BulmaClass::COLUMN);
+        $class = implode(" ", $classes);
+        $class = (new View($class))->escape();
+
+        return new View(HTML::div($content, ["class" => $class]));
     }
     
-    /**
-     * Bir "box" <div> elementi oluşturur.
-     * @param View|string $content Kutu içeriği.
-     * @param array $classes Eklenecek ekstra CSS sınıfları.
-     * @return View Oluşturulan box elementini içeren bir View nesnesi.
-     */
     public static function Box($content, array $classes=[]) : View
     {
-        $content = (new View($content))->escape(); // Kutu içeriğini güvenli hale getirir.
-        array_unshift($classes, BulmaClass::Box); // Sınıf listesinin başına "box" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::div($content, ["class" => $class])); // HTML yardımcısı ile div oluşturur.
+        $content = (new View($content))->escape();
+
+        array_unshift($classes, BulmaClass::BOX);
+        $class = implode(" ", $classes);
+        $class = (new View($class))->escape();
+
+        return new View(HTML::div($content, ["class" => $class]));
     }
 
-    //================================================================
-    // ELEMENTS (ELEMENTLER)
-    //================================================================
+    // Layouts
 
-    /**
-     * Bir <button> elementi oluşturur.
-     * @param string $content Buton metni.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @param array $attributes Eklenecek HTML attributeları.
-     * @return View Oluşturulan button elementini içeren bir View nesnesi.
-     */
-    public static function Button($content, array $classes=[], array $attributes = []) : View
+    public static function Media($content, array $classes = []) : View
     {
-        $content = (new View($content))->escape(); // Buton metnini güvenli hale getirir.
-        array_unshift($classes, BulmaClass::Button); // Sınıf listesine "button" sınıfını ekler.
-        $attributes['class'] = implode(" ", $classes); // Sınıfları birleştirip 'class' attribute'una atar.
-        return new View(HTML::button($content, $attributes)); // HTML yardımcısı ile button oluşturur.
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::MEDIA);
+        return new View(HTML::article($content, ["class" => implode(" ", $classes)]));
     }
 
-    /**
-     * Buton gibi görünen bir <a> linki oluşturur.
-     * @param string $content Link metni.
-     * @param string $href Linkin URL adresi.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @param array $attributes Eklenecek HTML attributeları.
-     * @return View Oluşturulan link elementini içeren bir View nesnesi.
-     */
-    public static function ButtonLink($content, string $href, array $classes=[], array $attributes = []) : View
+    public static function MediaLeft($content, array $classes = []) : View
     {
-        $content = (new View($content))->escape(); // Link metnini güvenli hale getirir.
-        $attributes['href'] = (new View($href))->escape(); // URL'yi güvenli hale getirir.
-        array_unshift($classes, BulmaClass::Button); // Sınıf listesine "button" sınıfını ekler.
-        $attributes['class'] = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::a($content, $attributes)); // HTML yardımcısı ile <a> linki oluşturur.
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::MEDIA_LEFT);
+        return new View(HTML::figure($content, ["class" => implode(" ", $classes)]));
     }
 
-    /**
-     * Zengin metin içeriği için bir "content" <div> oluşturur.
-     * @param View|string $content Genellikle HTML içeren içerik.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @return View Oluşturulan content div'ini içeren bir View nesnesi.
-     */
-    public static function Content($content, array $classes=[]) : View
+    public static function MediaContent($content, array $classes = []) : View
     {
-        // Bu fonksiyonda içerik genellikle zengin metin olduğu için escape edilmez.
-        // Güvenlik için bu fonksiyona gönderilen verinin önceden temizlenmesi (purify) gerekir.
-        array_unshift($classes, BulmaClass::Content); // Sınıf listesine "content" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::div($content, ["class" => $class])); // HTML yardımcısı ile div oluşturur.
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::MEDIA_CONTENT);
+        return new View(HTML::div($content, ["class" => implode(" ", $classes)]));
     }
 
-    /**
-     * Bir "delete" (kapatma) butonu oluşturur.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @param array $attributes Eklenecek HTML attributeları.
-     * @return View Oluşturulan delete butonunu içeren bir View nesnesi.
-     */
-    public static function Delete(array $classes=[], array $attributes = []) : View
+    public static function MediaRight($content, array $classes = []) : View
     {
-        array_unshift($classes, BulmaClass::Delete); // Sınıf listesine "delete" sınıfını ekler.
-        $attributes['class'] = implode(" ", $classes); // Sınıfları birleştirir.
-        $attributes['aria-label'] = "delete"; // Erişilebilirlik için etiket ekler.
-        return new View(HTML::button(null, $attributes)); // İçeriği olmayan bir buton oluşturur.
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::MEDIA_RIGHT);
+        return new View(HTML::div($content, ["class" => implode(" ", $classes)]));
     }
 
-    /**
-     * Bir "icon" <span> elementi oluşturur.
-     * @param string $iconClass İkonun CSS sınıfı (örn: "fas fa-home").
-     * @param array $spanClasses Dıştaki <span> için ekstra sınıflar.
-     * @param array $iClasses İçteki <i> için ekstra sınıflar.
-     * @return View Oluşturulan icon elementini içeren bir View nesnesi.
-     */
-    public static function Icon($iconClass, array $spanClasses=[], array $iClasses=[]) : View
+    public static function Level($left, $right, array $classes = []) : View
     {
-        $iconClass = (new View($iconClass))->escape(); // İkon sınıfını güvenli hale getirir.
-        array_unshift($spanClasses, BulmaClass::Icon); // Dış span için "icon" sınıfını ekler.
-        $spanClassStr = implode(" ", $spanClasses); // Span sınıflarını birleştirir.
-        $iClasses[] = $iconClass; // İkon sınıfını <i> etiketinin sınıflarına ekler.
-        $iClassStr = implode(" ", $iClasses); // <i> sınıflarını birleştirir.
-        $iTag = HTML::i(null, ["class" => $iClassStr, "aria-hidden" => "true"]); // <i> etiketini oluşturur.
-        return new View(HTML::span($iTag, ["class" => $spanClassStr])); // <i> etiketini <span> ile sarmalar.
+        $left = (new View($left))->escape();
+        $right = (new View($right))->escape();
+
+        array_unshift($classes, BulmaClass::LEVEL);
+        $levelLeft = HTML::div($left, ["class" => BulmaClass::LEVEL_LEFT]);
+        $levelRight = HTML::div($right, ["class" => BulmaClass::LEVEL_RIGHT]);
+
+        return new View(HTML::nav(View::concat($levelLeft, $levelRight), ["class" => implode(" ", $classes)]));
+    }
+
+    public static function LevelItem($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::LEVEL_ITEM);
+        return new View(HTML::div($content, ["class" => implode(" ", $classes)]));
+    }
+
+    public static function Hero($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::HERO);
+        $class = implode(" ", $classes);
+        return new View(HTML::section($content, ["class" => (new View($class))->escape()]));
     }
     
-    /**
-     * İkon ve metni birleştiren bir "icon-text" <span> oluşturur.
-     * @param View $icon Bulma::Icon() ile oluşturulmuş bir ikon.
-     * @param string $text İkonun yanındaki metin.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @return View Oluşturulan icon-text elementini içeren bir View nesnesi.
-     */
-    public static function IconText($icon, $text, array $classes=[]) : View
+    public static function HeroHead($content, array $classes = []) : View
     {
-        // $icon bir View nesnesi olduğu için tekrar escape edilmez.
-        $text = (new View($text))->escape(); // Metni güvenli hale getirir.
-        array_unshift($classes, BulmaClass::IconText); // "icon-text" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        $content = View::concat($icon, HTML::span($text)); // İkon ve metni birleştirir.
-        return new View(HTML::span($content, ['class' => $class])); // Sonucu bir span ile sarmalar.
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::HERO_HEAD);
+        $class = implode(" ", $classes);
+        return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    /**
-     * Bir "image" <figure> elementi oluşturur.
-     * @param string $src Resmin kaynak URL'si.
-     * @param array $figureClasses Dıştaki <figure> için sınıflar.
-     * @param array $imgAttributes İçteki <img> için attributelar.
-     * @return View Oluşturulan image elementini içeren bir View nesnesi.
-     */
-    public static function Image($src, array $figureClasses = [], array $imgAttributes = []) : View
+    public static function HeroBody($content, array $classes = []) : View
     {
-        $imgAttributes['src'] = (new View($src))->escape(); // Resim kaynağını güvenli hale getirir.
-        array_unshift($figureClasses, BulmaClass::Image); // "image" sınıfını ekler.
-        $figureClass = implode(" ", $figureClasses); // Sınıfları birleştirir.
-        return new View(HTML::figure(HTML::img($imgAttributes), ["class" => $figureClass])); // img'yi figure ile sarmalar.
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::HERO_BODY);
+        $class = implode(" ", $classes);
+        return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function HeroFoot($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::HERO_FOOT);
+        $class = implode(" ", $classes);
+        return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function Footer($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::FOOTER);
+        $class = implode(" ", $classes);
+        return new View(HTML::footer($content, ["class" => (new View($class))->escape()]));
     }
     
-    /**
-     * Bir "notification" <div> elementi oluşturur.
-     * @param string $content Bildirim içeriği.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @param bool $withDelete Kapatma düğmesi eklenip eklenmeyeceği.
-     * @return View Oluşturulan notification elementini içeren bir View nesnesi.
-     */
-    public static function Notification($content, array $classes=[], bool $withDelete = true) : View
+    // Elements
+
+    public static function Button($text, array $classes = [], array $attributes = []) : View
     {
-        $content = (new View($content))->escape(); // Bildirim içeriğini güvenli hale getirir.
-        array_unshift($classes, BulmaClass::Notification); // "notification" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        // Kapatma düğmesi isteniyorsa, içeriğin başına ekler.
-        $finalContent = $withDelete ? View::concat(self::Delete(), $content) : $content;
-        return new View(HTML::div($finalContent, ["class" => $class])); // Sonucu div ile sarmalar.
+        $text = (new View($text))->escape();
+        array_unshift($classes, BulmaClass::BUTTON);
+        $attributes['class'] = implode(" ", $classes);
+        return new View(HTML::button($text, $attributes));
     }
 
-    /**
-     * Bir "tag" <span> elementi oluşturur.
-     * @param string $content Etiket metni.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @return View Oluşturulan tag elementini içeren bir View nesnesi.
-     */
-    public static function Tag($content, array $classes=[]) : View
+    public static function ButtonLink($text, $href = '#', array $classes = [], array $attributes = []) : View
     {
-        $content = (new View($content))->escape(); // Etiket metnini güvenli hale getirir.
-        array_unshift($classes, BulmaClass::Tag); // "tag" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::span($content, ["class" => $class])); // Sonucu span ile sarmalar.
+        $text = (new View($text))->escape();
+        $href = (new View($href))->escape();
+        array_unshift($classes, BulmaClass::BUTTON);
+        $attributes['class'] = implode(" ", $classes);
+        $attributes['href'] = $href;
+        return new View(HTML::a($text, $attributes));
     }
 
-    /**
-     * Birden fazla tag'i içeren bir "tags" <div> sarmalayıcısı oluşturur.
-     * @param array $tags Bulma::Tag() ile oluşturulmuş View nesneleri dizisi.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @return View Oluşturulan tags sarmalayıcısını içeren bir View nesnesi.
-     */
-    public static function Tags($tags, array $classes=[]) : View
+    public static function Buttons($content, array $classes = []) : View
     {
-        $tagViews = []; // Boş bir dizi oluşturur.
-        foreach($tags as $tag){ // Gelen her bir etiket için döngü başlatır.
-            $tagViews[] = $tag; // Etiketi (View nesnesi) diziye ekler.
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::BUTTONS);
+        $class = implode(" ", $classes);
+        return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function Content($content, array $classes = [], bool $isRawHtml = false) : View
+    {
+        if (!$isRawHtml) {
+            $content = (new View($content))->escape();
         }
-        $content = View::concat(...$tagViews); // Tüm etiketleri birleştirir.
-        array_unshift($classes, BulmaClass::Tags); // "tags" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::div($content, ["class" => $class])); // Sonucu div ile sarmalar.
+
+        array_unshift($classes, BulmaClass::CONTENT);
+        $class = implode(" ", $classes);
+        return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    //================================================================
-    // COMPONENTS (BİLEŞENLER) - Birden fazla elementten oluşan yapılar.
-    //================================================================
+    public static function Icon($iconClasses, array $classes = []) : View
+    {
+        $iconClasses = (new View($iconClasses))->escape(); // e.g. "fas fa-home"
+        array_unshift($classes, BulmaClass::ICON);
+        $class = implode(" ", $classes);
+        $icon = HTML::i("", ["class" => $iconClasses]);
+        return new View(HTML::span($icon, ["class" => (new View($class))->escape()]));
+    }
 
-    // --- Card (Kart) Bileşeni ---
+    public static function Image($src, $alt = "", array $containerClasses = [], array $imgAttributes = []) : View
+    {
+        $src = (new View($src))->escape();
+        $alt = (new View($alt))->escape();
+        array_unshift($containerClasses, BulmaClass::IMAGE);
+        $class = implode(" ", $containerClasses);
+        $imgAttributes['src'] = $src;
+        $imgAttributes['alt'] = $alt;
+        $img = HTML::img($imgAttributes);
+        return new View(HTML::figure($img, ["class" => (new View($class))->escape()]));
+    }
 
-    /**
-     * Bir "card" <div> sarmalayıcısı oluşturur.
-     * @param View|string $content Kartın tüm parçalarını (header, image, content, footer) içeren içerik.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @return View Oluşturulan card elementini içeren bir View nesnesi.
-     */
-    public static function Card($content, array $classes=[]) : View
+        public static function Notification($content, bool $closable = false, array $classes = []) : View
     {
-        // İçerik, diğer Card... fonksiyonlarından gelen View nesnelerinin birleşimi olmalıdır.
-        array_unshift($classes, BulmaClass::Card); // "card" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::div($content, ["class" => $class])); // Sonucu div ile sarmalar.
-    }
-    /**
-     * Bir "card-header" <header> elementi oluşturur.
-     * @param string $title Kart başlığı.
-     * @param View|null $icon Başlığın sağındaki ikon (isteğe bağlı).
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @return View Oluşturulan card-header elementini içeren bir View nesnesi.
-     */
-    public static function CardHeader($title, $icon = null, array $classes=[]) : View
-    {
-        $title = (new View($title))->escape(); // Başlığı güvenli hale getirir.
-        $titleP = HTML::p($title, ["class" => BulmaClass::CardHeaderTitle]); // Başlık için <p> etiketi oluşturur.
-        // Eğer ikon varsa, onu bir <a> etiketi ile sarmalar.
-        $iconA = $icon ? HTML::a($icon, ["class" => BulmaClass::CardHeaderIcon]) : '';
-        $content = View::concat($titleP, $iconA); // Başlık ve ikonu birleştirir.
-        array_unshift($classes, BulmaClass::CardHeader); // "card-header" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::header($content, ["class" => $class])); // Sonucu header ile sarmalar.
-    }
-    /**
-     * Bir "card-image" <div> sarmalayıcısı oluşturur.
-     * @param View $image Bulma::Image() ile oluşturulmuş bir resim.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @return View Oluşturulan card-image elementini içeren bir View nesnesi.
-     */
-    public static function CardImage($image, array $classes=[]) : View
-    {
-        // $image bir View nesnesi olduğu için tekrar escape edilmez.
-        array_unshift($classes, BulmaClass::CardImage); // "card-image" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::div($image, ["class" => $class])); // Resmi div ile sarmalar.
-    }
-    /**
-     * Bir "card-content" <div> elementi oluşturur.
-     * @param View|string $content Kartın ana içeriği.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @return View Oluşturulan card-content elementini içeren bir View nesnesi.
-     */
-    public static function CardContent($content, array $classes=[]) : View
-    {
-        $content = (new View($content))->escape(); // İçeriği güvenli hale getirir.
-        array_unshift($classes, BulmaClass::CardContent); // "card-content" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::div($content, ["class" => $class])); // Sonucu div ile sarmalar.
-    }
-    /**
-     * Bir "card-footer" <footer> elementi oluşturur.
-     * @param array $items Footer içindeki öğeler (genellikle View nesneleri).
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @return View Oluşturulan card-footer elementini içeren bir View nesnesi.
-     */
-    public static function CardFooter($items, array $classes=[]) : View
-    {
-        $itemViews = []; // Boş bir dizi oluşturur.
-        foreach($items as $item){ // Her bir öğe için döngü başlatır.
-            // Her öğeyi "card-footer-item" sınıfına sahip bir div ile sarmalar.
-            $itemViews[] = HTML::div($item, ["class" => BulmaClass::CardFooterItem]);
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::NOTIFICATION);
+        $class = implode(" ", $classes);
+
+        if ($closable) {
+            $deleteButton = HTML::button("", ["class" => BulmaClass::DELETE]);
+            $content = View::concat($deleteButton, $content);
         }
-        $content = View::concat(...$itemViews); // Tüm öğeleri birleştirir.
-        array_unshift($classes, BulmaClass::CardFooter); // "card-footer" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::footer($content, ["class" => $class])); // Sonucu footer ile sarmalar.
-    }
 
-    // --- Message (Mesaj) Bileşeni ---
-
-    /**
-     * Bir "message" <article> bileşeni oluşturur.
-     * @param string $header Mesaj başlığı.
-     * @param string $body Mesaj gövdesi.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @param bool $withDelete Kapatma düğmesi eklenip eklenmeyeceği.
-     * @return View Oluşturulan message bileşenini içeren bir View nesnesi.
-     */
-    public static function Message($header, $body, array $classes=[], bool $withDelete = true) : View
-    {
-        $header = (new View($header))->escape(); // Başlığı güvenli hale getirir.
-        $body = (new View($body))->escape(); // Gövdeyi güvenli hale getirir.
-        array_unshift($classes, BulmaClass::Message); // "message" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        $deleteButton = $withDelete ? self::Delete() : ''; // Kapatma düğmesi isteniyorsa oluşturur.
-        $headerContent = View::concat(HTML::p($header), $deleteButton); // Başlık ve kapatma düğmesini birleştirir.
-        $messageHeader = HTML::div($headerContent, ["class" => BulmaClass::MessageHeader]); // Mesaj başlığını oluşturur.
-        $messageBody = HTML::div($body, ["class" => BulmaClass::MessageBody]); // Mesaj gövdesini oluşturur.
-        $content = View::concat($messageHeader, $messageBody); // Başlık ve gövdeyi birleştirir.
-        return new View(HTML::article($content, ["class" => $class])); // Sonucu article ile sarmalar.
-    }
-
-    // --- Modal (Popup Pencere) Bileşeni ---
-
-    /**
-     * Bir "modal" <div> bileşeni oluşturur.
-     * @param View|string $content Modal penceresinin içeriği.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @return View Oluşturulan modal bileşenini içeren bir View nesnesi.
-     */
-    public static function Modal($content, array $classes=[]) : View
-    {
-        // İçerik genellikle Box gibi başka bir bileşenden gelen View nesnesidir.
-        array_unshift($classes, BulmaClass::Modal); // "modal" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        // Modal'ın parçalarını (arka plan, içerik, kapatma düğmesi) oluşturur ve birleştirir.
-        $modalContent = View::concat(
-            HTML::div(null, ["class" => BulmaClass::ModalBackground]),
-            HTML::div($content, ["class" => BulmaClass::ModalContent]),
-            self::Delete(['class' => BulmaClass::ModalClose, 'is-large'])
-        );
-        return new View(HTML::div($modalContent, ["class" => $class])); // Sonucu div ile sarmalar.
+        return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
     
-    // --- Navbar (Navigasyon Çubuğu) Bileşeni ---
+    public static function Progress($value, $max = "100", array $classes = []) : View
+    {
+        $value = (new View($value))->escape();
+        $max = (new View($max))->escape();
+        array_unshift($classes, BulmaClass::PROGRESS);
+        $class = implode(" ", $classes);
+        return new View(HTML::progress($value, ["class" => (new View($class))->escape(), "value" => $value, "max" => $max]));
+    }
 
-    /**
-     * Bir "navbar" <nav> bileşeni oluşturur.
-     * @param View $brand Navbar'ın marka (logo) bölümü.
-     * @param View $menu Navbar'ın menü bölümü.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @param array $attributes Eklenecek HTML attributeları.
-     * @return View Oluşturulan navbar bileşenini içeren bir View nesnesi.
-     */
-    public static function Navbar($brand, $menu, array $classes=[], array $attributes=[]) : View
+    public static function Table($head, $body, array $classes = [], bool $isBordered = false, bool $isStriped = false, bool $isNarrow = false, bool $isHoverable = false, bool $isFullwidth = false) : View
     {
-        // $brand ve $menu, diğer Navbar... fonksiyonlarından gelen View nesneleridir.
-        array_unshift($classes, BulmaClass::Navbar); // "navbar" sınıfını ekler.
-        $attributes['class'] = implode(" ", $classes); // Sınıfları birleştirir.
-        $attributes['role'] = 'navigation'; // Erişilebilirlik için rol belirtir.
-        $attributes['aria-label'] = 'main navigation'; // Erişilebilirlik için etiket belirtir.
-        $content = View::concat($brand, $menu); // Marka ve menüyü birleştirir.
-        return new View(HTML::nav($content, $attributes)); // Sonucu nav ile sarmalar.
+        $head = (new View($head))->escape();
+        $body = (new View($body))->escape();
+        array_unshift($classes, BulmaClass::TABLE);
+        if ($isBordered) $classes[] = BulmaClass::IS_BORDERED;
+        if ($isStriped) $classes[] = BulmaClass::IS_STRIPED;
+        if ($isNarrow) $classes[] = BulmaClass::IS_NARROW;
+        if ($isHoverable) $classes[] = BulmaClass::IS_HOVERABLE;
+        if ($isFullwidth) $classes[] = BulmaClass::IS_FULLWIDTH;
+        $class = implode(" ", $classes);
+        $thead = HTML::thead($head);
+        $tbody = HTML::tbody($body);
+        $table = HTML::table(View::concat($thead, $tbody), ["class" => (new View($class))->escape()]);
+        return new View(HTML::div($table, ["class" => BulmaClass::TABLE_CONTAINER]));
     }
-    /**
-     * Bir "navbar-brand" <div> sarmalayıcısı oluşturur.
-     * @param View|string $content Marka bölümünün içeriği.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @return View Oluşturulan navbar-brand elementini içeren bir View nesnesi.
-     */
-    public static function NavbarBrand($content, array $classes=[]) : View
+
+    public static function Tag($content, array $classes = []) : View
     {
-        array_unshift($classes, BulmaClass::NavbarBrand); // "navbar-brand" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::div($content, ["class" => $class])); // Sonucu div ile sarmalar.
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::TAG);
+        $class = implode(" ", $classes);
+        return new View(HTML::span($content, ["class" => (new View($class))->escape()]));
     }
-    /**
-     * Bir "navbar-burger" (mobil menü butonu) oluşturur.
-     * @param array $attributes Eklenecek HTML attributeları.
-     * @return View Oluşturulan navbar-burger elementini içeren bir View nesnesi.
-     */
-    public static function NavbarBurger(array $attributes=[]) : View
+
+    public static function Tags($content, array $classes = []) : View
     {
-        // Bu veriler kullanıcıdan gelmediği için escape edilmemiştir.
-        $attributes['role'] = 'button'; // Erişilebilirlik için rol belirtir.
-        $attributes['class'] = BulmaClass::NavbarBurger; // "navbar-burger" sınıfını atar.
-        $attributes['aria-label'] = 'menu'; // Erişilebilirlik için etiket belirtir.
-        $attributes['aria-expanded'] = 'false'; // Menünün başlangıçta kapalı olduğunu belirtir.
-        // Burger ikonunun üç çizgisini oluşturan span'ları oluşturur.
-        $content = View::concat(
-            HTML::span(null, ["aria-hidden" => "true"]),
-            HTML::span(null, ["aria-hidden" => "true"]),
-            HTML::span(null, ["aria-hidden" => "true"])
-        );
-        return new View(HTML::a($content, $attributes)); // Çizgileri bir <a> linki ile sarmalar.
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::TAGS);
+        $class = implode(" ", $classes);
+        return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
-    /**
-     * Bir "navbar-menu" <div> sarmalayıcısı oluşturur.
-     * @param View $start Menünün başlangıç (sol) kısmı.
-     * @param View $end Menünün bitiş (sağ) kısmı.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @param array $attributes Eklenecek HTML attributeları.
-     * @return View Oluşturulan navbar-menu elementini içeren bir View nesnesi.
-     */
-    public static function NavbarMenu($start, $end, array $classes=[], array $attributes=[]) : View
+
+    public static function Title($content, $size = "3", array $classes = []) : View
     {
-        array_unshift($classes, BulmaClass::NavbarMenu); // "navbar-menu" sınıfını ekler.
-        $attributes['class'] = implode(" ", $classes); // Sınıfları birleştirir.
-        $startDiv = HTML::div($start, ["class" => BulmaClass::NavbarStart]); // Menünün başlangıç bölümünü oluşturur.
-        $endDiv = HTML::div($end, ["class" => BulmaClass::NavbarEnd]); // Menünün bitiş bölümünü oluşturur.
-        $content = View::concat($startDiv, $endDiv); // Başlangıç ve bitişi birleştirir.
-        return new View(HTML::div($content, $attributes)); // Sonucu div ile sarmalar.
-    }
-    /**
-     * Bir "navbar-item" <a> veya <div> elementi oluşturur.
-     * @param View|string $content Menü öğesinin içeriği.
-     * @param string $href Link URL'si (eğer link ise).
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @param bool $isLink Öğenin bir link olup olmadığı.
-     * @return View Oluşturulan navbar-item elementini içeren bir View nesnesi.
-     */
-    public static function NavbarItem($content, string $href = '#', array $classes=[], $isLink = true) : View
-    {
-        $content = (new View($content))->escape(); // İçeriği güvenli hale getirir.
-        array_unshift($classes, BulmaClass::NavbarItem); // "navbar-item" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        if($isLink){ // Eğer öğe bir link ise...
-            return new View(HTML::a($content, ["href" => (new View($href))->escape(), "class" => $class])); // <a> etiketi oluşturur.
+        $content = (new View($content))->escape();
+        $intSize = intval($size);
+        if ($intSize < 1 || $intSize > 6) {
+            $intSize = 3;
         }
-        return new View(HTML::div($content, ["class" => $class])); // Değilse, <div> etiketi oluşturur.
+
+        array_unshift($classes, BulmaClass::TITLE);
+        $classes[] = "is-" . $intSize; 
+        
+        $class = implode(" ", $classes);
+        $tag = 'h' . $intSize;
+        return new View(HTML::$tag($content, ["class" => (new View($class))->escape()]));
     }
-    /**
-     * Bir "navbar-dropdown" (açılır menü) oluşturur.
-     * @param string $title Açılır menünün başlığı.
-     * @param View $items Açılır menünün içeriği.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @return View Oluşturulan navbar-dropdown elementini içeren bir View nesnesi.
-     */
-    public static function NavbarDropdown($title, $items, array $classes=[]) : View
+
+    public static function Subtitle($content, $size = "5", array $classes = []) : View
     {
-        $title = (new View($title))->escape(); // Başlığı güvenli hale getirir.
-        $link = HTML::a($title, ["class" => BulmaClass::NavbarLink]); // Açılır menü başlığı için link oluşturur.
-        $dropdownContent = HTML::div($items, ["class" => BulmaClass::NavbarDropdown]); // Açılır menü içeriğini oluşturur.
-        // Gerekli sınıfları bir diziye ekler.
-        array_unshift($classes, BulmaClass::NavbarItem, BulmaClass::HasDropdown, BulmaClass::IsHoverable);
-        // Başlık linkini ve içeriği birleştirip bir div ile sarmalar.
-        return new View(HTML::div(View::concat($link, $dropdownContent), ["class" => implode(" ", $classes)]));
+        $content = (new View($content))->escape();
+        $intSize = intval($size);
+        if ($intSize < 1 || $intSize > 6) {
+            $intSize = 5; 
+        }
+
+        array_unshift($classes, BulmaClass::SUBTITLE);
+        $classes[] = "is-" . $intSize;
+        
+        $class = implode(" ", $classes);
+        $tag = 'h' . $intSize;
+        return new View(HTML::$tag($content, ["class" => (new View($class))->escape()]));
     }
-    /**
-     * Bir "navbar-divider" (ayırıcı çizgi) oluşturur.
-     * @param array $classes Eklenecek CSS sınıfları.
-     * @return View Oluşturulan navbar-divider elementini içeren bir View nesnesi.
-     */
-    public static function NavbarDivider(array $classes=[]) : View
+
+    // Components
+    public static function Breadcrumb($items, array $classes = [], array $attributes = []) : View
     {
-        array_unshift($classes, BulmaClass::NavbarDivider); // "navbar-divider" sınıfını ekler.
-        $class = implode(" ", $classes); // Sınıfları birleştirir.
-        return new View(HTML::hr(null, ["class" => $class])); // <hr> etiketi oluşturur.
+        $listItems = "";
+        foreach ($items as $item) {
+            $itemText = (new View($item['text']))->escape();
+            $itemLink = isset($item['href']) ? (new View($item['href']))->escape() : '#';
+            $isActive = isset($item['active']) && $item['active'];
+            $liClass = $isActive ? BulmaClass::IS_ACTIVE : '';
+            $link = HTML::a($itemText, ['href' => $itemLink]);
+            $listItems = View::concat($listItems, HTML::li($link, ['class' => $liClass]));
+        }
+        array_unshift($classes, BulmaClass::BREADCRUMB);
+        $attributes['class'] = implode(" ", $classes);
+        $attributes['aria-label'] = 'breadcrumbs';
+        $ul = HTML::ul($listItems);
+        return new View(HTML::nav($ul, $attributes));
     }
-} // Sınıf tanımının bittiği yer.
+
+    public static function Card($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::CARD);
+        $class = implode(" ", $classes);
+        return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function CardHeader($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::CARD_HEADER);
+        $class = implode(" ", $classes);
+        return new View(HTML::header($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function CardHeaderTitle($title, array $classes = []) : View
+    {
+        $title = (new View($title))->escape();
+        array_unshift($classes, BulmaClass::CARD_HEADER_TITLE);
+        $class = implode(" ", $classes);
+        return new View(HTML::p($title, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function CardImage($src, $alt = "", array $containerClasses = [], array $imgAttributes = []) : View
+    {
+        array_unshift($containerClasses, BulmaClass::CARD_IMAGE);
+        return self::Image($src, $alt, $containerClasses, $imgAttributes);
+    }
+
+    public static function CardContent($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::CARD_CONTENT);
+        $class = implode(" ", $classes);
+        return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function CardFooter($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::CARD_FOOTER);
+        $class = implode(" ", $classes);
+        return new View(HTML::footer($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function CardFooterItem($content, $isLink = true, $href = '#', array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        $href = (new View($href))->escape();
+        array_unshift($classes, BulmaClass::CARD_FOOTER_ITEM);
+        $class = implode(" ", $classes);
+        if ($isLink) {
+            return new View(HTML::a($content, ["href" => $href, "class" => (new View($class))->escape()]));
+        }
+        return new View(HTML::p($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function Message($header, $body, array $classes = [], bool $closable = false) : View
+    {
+        $header = (new View($header))->escape();
+        $body = (new View($body))->escape();
+        array_unshift($classes, BulmaClass::MESSAGE);
+        $class = implode(" ", $classes);
+        $messageHeader = self::MessageHeader($header, $closable);
+        $messageBody = self::MessageBody($body);
+        return new View(HTML::article(View::concat($messageHeader, $messageBody), ["class" => (new View($class))->escape()]));
+    }
+
+    public static function MessageHeader($content, bool $closable = false) : View
+    {
+        $content = (new View($content))->escape();
+        if ($closable) {
+            $deleteButton = HTML::button("", ["class" => BulmaClass::DELETE, "aria-label" => "delete"]);
+            $content = View::concat($content, $deleteButton);
+        }
+        return new View(HTML::div($content, ["class" => BulmaClass::MESSAGE_HEADER]));
+    }
+
+    public static function MessageBody($content) : View
+    {
+        $content = (new View($content))->escape();
+        return new View(HTML::div($content, ["class" => BulmaClass::MESSAGE_BODY]));
+    }
+
+    public static function Modal($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::MODAL);
+        $class = implode(" ", $classes);
+        $background = HTML::div("", ["class" => BulmaClass::MODAL_BACKGROUND]);
+        $modalContent = HTML::div($content, ["class" => BulmaClass::MODAL_CONTENT]);
+        $closeButton = HTML::button("", ["class" => BulmaClass::MODAL_CLOSE, "aria-label" => "close"]);
+        return new View(HTML::div(View::concat($background, $modalContent, $closeButton), ["class" => (new View($class))->escape()]));
+    }
+
+    public static function ModalCard($head, $body, $foot, array $classes = []) : View
+    {
+        $head = (new View($head))->escape();
+        $body = (new View($body))->escape();
+        $foot = (new View($foot))->escape();
+        array_unshift($classes, BulmaClass::MODAL);
+        $class = implode(" ", $classes);
+
+        $cardHead = HTML::header(View::concat(HTML::p($head, ["class"=>BulmaClass::MODAL_CARD_TITLE]), HTML::button("",["class"=>BulmaClass::DELETE, "aria-label"=>"close"])), ["class"=>BulmaClass::MODAL_CARD_HEAD]);
+        $cardBody = HTML::section($body, ["class"=>BulmaClass::MODAL_CARD_BODY]);
+        $cardFoot = HTML::footer($foot, ["class"=>BulmaClass::MODAL_CARD_FOOT]);
+
+        $modalCard = HTML::div(View::concat($cardHead, $cardBody, $cardFoot), ["class"=>BulmaClass::MODAL_CARD]);
+        $background = HTML::div("", ["class" => BulmaClass::MODAL_BACKGROUND]);
+
+        return new View(HTML::div(View::concat($background, $modalCard), ["class" => (new View($class))->escape()]));
+    }
+
+    public static function Dropdown($trigger, $content, array $classes = []) : View
+    {
+        $trigger = (new View($trigger))->escape();
+        $content = (new View($content))->escape();
+
+        array_unshift($classes, BulmaClass::DROPDOWN);
+        // JS kullanmadığımız için üzerine gelince açılan bir örnek yapalım.
+        $classes[] = BulmaClass::IS_HOVERABLE;
+
+        $triggerDiv = HTML::div($trigger, ["class" => BulmaClass::DROPDOWN_TRIGGER]);
+        $menuContent = HTML::div($content, ["class" => BulmaClass::DROPDOWN_CONTENT]);
+        $menuDiv = HTML::div($menuContent, ["class" => BulmaClass::DROPDOWN_MENU]);
+
+        return new View(HTML::div(View::concat($triggerDiv, $menuDiv), ["class" => implode(" ", $classes)]));
+    }
+
+    public static function Navbar($brand, $menu, array $classes = [], array $attributes = []) : View
+    {
+        $brand = (new View($brand))->escape();
+        $menu = (new View($menu))->escape();
+        array_unshift($classes, BulmaClass::NAVBAR);
+        $attributes['class'] = implode(" ", $classes);
+        $attributes['role'] = 'navigation';
+        $attributes['aria-label'] = 'main navigation';
+        $container = self::Container(View::concat($brand, $menu));
+        return new View(HTML::nav($container, $attributes));
+    }
+
+    public static function NavbarBrand($content) : View
+    {
+        $content = (new View($content))->escape();
+        return new View(HTML::div($content, ["class" => BulmaClass::NAVBAR_BRAND]));
+    }
+
+    public static function NavbarBurger(string $target) : View
+    {
+        $target = (new View($target))->escape();
+        $spans = View::concat(HTML::span(['aria-hidden' => 'true']), HTML::span(['aria-hidden' => 'true']), HTML::span(['aria-hidden' => 'true']));
+        return new View(HTML::a($spans, [
+            "role" => "button",
+            "class" => BulmaClass::NAVBAR_BURGER,
+            "aria-label" => "menu",
+            "aria-expanded" => "false",
+            "data-target" => $target
+        ]));
+    }
+
+    public static function NavbarMenu($startContent, $endContent, string $id, array $classes = []) : View
+    {
+        $startContent = (new View($startContent))->escape();
+        $endContent = (new View($endContent))->escape();
+        $id = (new View($id))->escape();
+        array_unshift($classes, BulmaClass::NAVBAR_MENU);
+        $class = implode(" ", $classes);
+        $start = HTML::div($startContent, ["class" => BulmaClass::NAVBAR_START]);
+        $end = HTML::div($endContent, ["class" => BulmaClass::NAVBAR_END]);
+        return new View(HTML::div(View::concat($start, $end), ["id" => $id, "class" => (new View($class))->escape()]));
+    }
+
+    public static function NavbarItem($content, $isLink = true, $href = '#', array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        $href = (new View($href))->escape();
+        array_unshift($classes, BulmaClass::NAVBAR_ITEM);
+        $class = implode(" ", $classes);
+        if($isLink) {
+            return new View(HTML::a($content, ["href" => $href, "class" => (new View($class))->escape()]));
+        }
+        return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function NavbarLink($text, array $classes = []) : View
+    {
+        $text = (new View($text))->escape();
+        array_unshift($classes, BulmaClass::NAVBAR_LINK);
+        $class = implode(" ", $classes);
+        return new View(HTML::a($text, ["class" => (new View($class))->escape()]));
+    }
+    
+    public static function NavbarDropdown($link, $content, array $classes = []) : View
+    {
+        $link = (new View($link))->escape();
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::HAS_DROPDOWN, BulmaClass::IS_HOVERABLE);
+        $item = self::NavbarItem(View::concat(
+            $link,
+            HTML::div($content, ["class" => BulmaClass::NAVBAR_DROPDOWN])
+        ), false, '#', $classes);
+        return new View($item);
+    }
+
+    public static function NavbarDivider(array $classes = []) : View
+    {
+        array_unshift($classes, BulmaClass::NAVBAR_DIVIDER);
+        $class = implode(" ", $classes);
+        return new View(HTML::hr([],["class" => (new View($class))->escape()]));
+    }
+
+
+    public static function Tabs($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::TABS);
+        return new View(HTML::div($content, ["class" => implode(" ", $classes)]));
+    }
+    
+    // Form
+    public static function Field($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::FIELD);
+        $class = implode(" ", $classes);
+        return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function Label($text, array $classes = []) : View
+    {
+        $text = (new View($text))->escape();
+        array_unshift($classes, BulmaClass::LABEL);
+        $class = implode(" ", $classes);
+        return new View(HTML::label($text, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function Control($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::CONTROL);
+        $class = implode(" ", $classes);
+        return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function Input(array $attributes = [], array $classes = []) : View
+    {
+        array_unshift($classes, BulmaClass::INPUT);
+        $attributes['class'] = implode(" ", $classes);
+        return new View(HTML::input($attributes));
+    }
+
+    public static function Textarea($content = "", array $attributes = [], array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::TEXTAREA);
+        $attributes['class'] = implode(" ", $classes);
+        return new View(HTML::textarea($content, $attributes));
+    }
+
+    public static function Select($options, array $attributes = [], array $classes = []) : View
+    {
+        $options = (new View($options))->escape();
+        array_unshift($classes, BulmaClass::SELECT);
+        $class = implode(" ", $classes);
+        $select = HTML::select($options, $attributes);
+        return new View(HTML::div($select, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function Checkbox($label, array $attributes = [], array $classes = []) : View
+    {
+        $label = (new View($label))->escape();
+        array_unshift($classes, BulmaClass::CHECKBOX);
+        $attributes['type'] = 'checkbox';
+        $input = HTML::input($attributes);
+        $content = View::concat($input, " ", $label);
+        return new View(HTML::label($content, ["class" => implode(" ", $classes)]));
+    }
+
+    public static function Radio($label, array $attributes = [], array $classes = []) : View
+    {
+        $label = (new View($label))->escape();
+        array_unshift($classes, BulmaClass::RADIO);
+        $attributes['type'] = 'radio';
+        $input = HTML::input($attributes);
+        $content = View::concat($input, " ", $label);
+        return new View(HTML::label($content, ["class" => implode(" ", $classes)]));
+    }
+
+    public static function Help($text, array $classes = []) : View
+    {
+        $text = (new View($text))->escape();
+        array_unshift($classes, BulmaClass::HELP);
+        $class = implode(" ", $classes);
+        return new View(HTML::p($text, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function File($label, $inputName, array $classes = []) : View
+    {
+        $label = (new View($label))->escape();
+        $inputName = (new View($inputName))->escape();
+
+        array_unshift($classes, BulmaClass::FILE);
+
+        $fileInput = HTML::input(["type" => "file", "name" => $inputName, "class" => BulmaClass::FILE_INPUT]);
+        $uploadIcon = HTML::span(Bulma::Icon('fas fa-upload'), ["class" => BulmaClass::FILE_ICON]);
+        $fileLabelSpan = HTML::span($label, ["class" => BulmaClass::FILE_LABEL]);
+        $fileCta = HTML::span(View::concat($uploadIcon, $fileLabelSpan), ["class" => BulmaClass::FILE_CTA]);
+        $fileNameSpan = HTML::span("No file selected", ["class" => BulmaClass::FILE_NAME]);
+        $classes[] = 'has-name';
+
+        $labelElement = HTML::label(View::concat($fileInput, $fileCta, $fileNameSpan), ["class" => implode(" ", $classes)]);
+        
+        return new View($labelElement);
+    }
+
+    public static function Panel($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::PANEL);
+        $class = implode(" ", $classes);
+        return new View(HTML::nav($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function PanelHeading($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::PANEL_HEADING);
+        $class = implode(" ", $classes);
+        return new View(HTML::p($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function PanelBlock($content, $isLink = false, $href = '#', array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::PANEL_BLOCK);
+        $class = implode(" ", $classes);
+        if ($isLink) {
+            $href = (new View($href))->escape();
+            return new View(HTML::a($content, ["href" => $href, "class" => (new View($class))->escape()]));
+        }
+        return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function PanelTabs($content, array $classes = []) : View
+    {
+        $content = (new View($content))->escape();
+        array_unshift($classes, BulmaClass::PANEL_TABS);
+        $class = implode(" ", $classes);
+        return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
+    }
+
+    public static function PanelIcon($iconClasses, array $classes = []) : View
+    {
+        $iconClasses = (new View($iconClasses))->escape();
+        array_unshift($classes, BulmaClass::PANEL_ICON);
+        $class = implode(" ", $classes);
+        $icon = HTML::i("", ["class" => $iconClasses, 'aria-hidden' => 'true']);
+        return new View(HTML::span($icon, ["class" => (new View($class))->escape()]));
+    }
+    
+}
