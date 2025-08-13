@@ -1,8 +1,7 @@
 <?php
 
 abstract class BulmaClass
-{   
-
+{
     // Layout
     public const CONTAINER = "container";
     public const SECTION = "section";
@@ -163,7 +162,7 @@ abstract class BulmaClass
     public const IS_WARNING = "is-warning";
     public const IS_WHITE = "is-white";
     public const IS_OUTLINED = "is-outlined";
-    public const IS_LEFT = "is-left"; 
+    public const IS_LEFT = "is-left";
     public const IS_BOXED = "is-boxed";
 
     // Layout & Structure
@@ -527,5 +526,4 @@ abstract class BulmaClass
     public const HAS_SKELETON = "has-skeleton";
     public const SKELETON_BLOCK = "skeleton-block";
     public const SKELETON_LINES = "skeleton-lines";
-    
 }

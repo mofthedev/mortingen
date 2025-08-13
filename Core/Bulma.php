@@ -35,40 +35,40 @@ class Bulma
         static::$append_body[] = $content;
     }
 
-    public static function Html($content, $title = "Mortingen Framework") : View
+    public static function Html($content, $title = "Mortingen Framework"): View
     {
         $content = (new View($content))->escape();
         $title = (new View($title))->escape();
 
-        $baseHtml = "<!DOCTYPE html>". PHP_EOL .
-                    HTML::html(
+        $baseHtml = "<!DOCTYPE html>" . PHP_EOL .
+            HTML::html(
+                View::concat(
+                    HTML::head(
+                        // It is required to use View::concat(...) to concatenate consecutive View objects or strings.
                         View::concat(
-                            HTML::head(
-                                // It is required to use View::concat(...) to concatenate consecutive View objects or strings.
-                                View::concat(
-                                    View::concat(...static::$prepend_head) ,
-                                    HTML::meta(["charset" => "UTF-8"]) ,
-                                    HTML::meta(["name" => "viewport", "content" => "width=device-width, initial-scale=1.0"]) ,
-                                    HTML::title($title) ,
-                                    HTML::css(App::getURIRoot()."/Public/bulma/css/bulma.min.css") ,
-                                    View::concat(...static::$append_head)
-                                )
-                            ) ,
-                            HTML::body($content)
+                            View::concat(...static::$prepend_head),
+                            HTML::meta(["charset" => "UTF-8"]),
+                            HTML::meta(["name" => "viewport", "content" => "width=device-width, initial-scale=1.0"]),
+                            HTML::title($title),
+                            HTML::css(App::getURIRoot() . "/Public/bulma/css/bulma.min.css"),
+                            View::concat(...static::$append_head)
                         )
-                    );
+                    ),
+                    HTML::body($content)
+                )
+            );
 
         return new View($baseHtml);
     }
 
-    public static function Section($content) : View
+    public static function Section($content): View
     {
         $content = (new View($content))->escape();
 
         return new View(HTML::section($content, ["class" => BulmaClass::SECTION]));
     }
 
-    public static function Container($content, array $classes=[]) : View
+    public static function Container($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
 
@@ -79,7 +79,7 @@ class Bulma
         return new View(HTML::div($content, ["class" => $class]));
     }
 
-    public static function Cols($content, array $classes=[]) : View
+    public static function Cols($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
 
@@ -90,7 +90,7 @@ class Bulma
         return new View(HTML::div($content, ["class" => $class]));
     }
 
-    public static function Col($content, array $classes=[]) : View
+    public static function Col($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
 
@@ -100,8 +100,8 @@ class Bulma
 
         return new View(HTML::div($content, ["class" => $class]));
     }
-    
-    public static function Box($content, array $classes=[]) : View
+
+    public static function Box($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
 
@@ -114,35 +114,35 @@ class Bulma
 
     // Layouts
 
-    public static function Media($content, array $classes = []) : View
+    public static function Media($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::MEDIA);
         return new View(HTML::article($content, ["class" => implode(" ", $classes)]));
     }
 
-    public static function MediaLeft($content, array $classes = []) : View
+    public static function MediaLeft($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::MEDIA_LEFT);
         return new View(HTML::figure($content, ["class" => implode(" ", $classes)]));
     }
 
-    public static function MediaContent($content, array $classes = []) : View
+    public static function MediaContent($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::MEDIA_CONTENT);
         return new View(HTML::div($content, ["class" => implode(" ", $classes)]));
     }
 
-    public static function MediaRight($content, array $classes = []) : View
+    public static function MediaRight($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::MEDIA_RIGHT);
         return new View(HTML::div($content, ["class" => implode(" ", $classes)]));
     }
 
-    public static function Level($left, $right, array $classes = []) : View
+    public static function Level($left, $right, array $classes = []): View
     {
         $left = (new View($left))->escape();
         $right = (new View($right))->escape();
@@ -154,22 +154,22 @@ class Bulma
         return new View(HTML::nav(View::concat($levelLeft, $levelRight), ["class" => implode(" ", $classes)]));
     }
 
-    public static function LevelItem($content, array $classes = []) : View
+    public static function LevelItem($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::LEVEL_ITEM);
         return new View(HTML::div($content, ["class" => implode(" ", $classes)]));
     }
 
-    public static function Hero($content, array $classes = []) : View
+    public static function Hero($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::HERO);
         $class = implode(" ", $classes);
         return new View(HTML::section($content, ["class" => (new View($class))->escape()]));
     }
-    
-    public static function HeroHead($content, array $classes = []) : View
+
+    public static function HeroHead($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::HERO_HEAD);
@@ -177,7 +177,7 @@ class Bulma
         return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function HeroBody($content, array $classes = []) : View
+    public static function HeroBody($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::HERO_BODY);
@@ -185,7 +185,7 @@ class Bulma
         return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function HeroFoot($content, array $classes = []) : View
+    public static function HeroFoot($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::HERO_FOOT);
@@ -193,17 +193,17 @@ class Bulma
         return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function Footer($content, array $classes = []) : View
+    public static function Footer($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::FOOTER);
         $class = implode(" ", $classes);
         return new View(HTML::footer($content, ["class" => (new View($class))->escape()]));
     }
-    
+
     // Elements
 
-    public static function Button($text, array $classes = [], array $attributes = []) : View
+    public static function Button($text, array $classes = [], array $attributes = []): View
     {
         $text = (new View($text))->escape();
         array_unshift($classes, BulmaClass::BUTTON);
@@ -211,7 +211,7 @@ class Bulma
         return new View(HTML::button($text, $attributes));
     }
 
-    public static function ButtonLink($text, $href = '#', array $classes = [], array $attributes = []) : View
+    public static function ButtonLink($text, $href = '#', array $classes = [], array $attributes = []): View
     {
         $text = (new View($text))->escape();
         $href = (new View($href))->escape();
@@ -221,7 +221,7 @@ class Bulma
         return new View(HTML::a($text, $attributes));
     }
 
-    public static function Buttons($content, array $classes = []) : View
+    public static function Buttons($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::BUTTONS);
@@ -229,9 +229,10 @@ class Bulma
         return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function Content($content, array $classes = [], bool $isRawHtml = false) : View
+    public static function Content($content, array $classes = [], bool $isRawHtml = false): View
     {
-        if (!$isRawHtml) {
+        if (!$isRawHtml)
+        {
             $content = (new View($content))->escape();
         }
 
@@ -240,7 +241,7 @@ class Bulma
         return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function Icon($iconClasses, array $classes = []) : View
+    public static function Icon($iconClasses, array $classes = []): View
     {
         $iconClasses = (new View($iconClasses))->escape(); // e.g. "fas fa-home"
         array_unshift($classes, BulmaClass::ICON);
@@ -249,7 +250,7 @@ class Bulma
         return new View(HTML::span($icon, ["class" => (new View($class))->escape()]));
     }
 
-    public static function Image($src, $alt = "", array $containerClasses = [], array $imgAttributes = []) : View
+    public static function Image($src, $alt = "", array $containerClasses = [], array $imgAttributes = []): View
     {
         $src = (new View($src))->escape();
         $alt = (new View($alt))->escape();
@@ -261,21 +262,22 @@ class Bulma
         return new View(HTML::figure($img, ["class" => (new View($class))->escape()]));
     }
 
-        public static function Notification($content, bool $closable = false, array $classes = []) : View
+    public static function Notification($content, bool $closable = false, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::NOTIFICATION);
         $class = implode(" ", $classes);
 
-        if ($closable) {
+        if ($closable)
+        {
             $deleteButton = HTML::button("", ["class" => BulmaClass::DELETE]);
             $content = View::concat($deleteButton, $content);
         }
 
         return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
-    
-    public static function Progress($value, $max = "100", array $classes = []) : View
+
+    public static function Progress($value, $max = "100", array $classes = []): View
     {
         $value = (new View($value))->escape();
         $max = (new View($max))->escape();
@@ -284,7 +286,7 @@ class Bulma
         return new View(HTML::progress($value, ["class" => (new View($class))->escape(), "value" => $value, "max" => $max]));
     }
 
-    public static function Table($head, $body, array $classes = [], bool $isBordered = false, bool $isStriped = false, bool $isNarrow = false, bool $isHoverable = false, bool $isFullwidth = false) : View
+    public static function Table($head, $body, array $classes = [], bool $isBordered = false, bool $isStriped = false, bool $isNarrow = false, bool $isHoverable = false, bool $isFullwidth = false): View
     {
         $head = (new View($head))->escape();
         $body = (new View($body))->escape();
@@ -301,7 +303,7 @@ class Bulma
         return new View(HTML::div($table, ["class" => BulmaClass::TABLE_CONTAINER]));
     }
 
-    public static function Tag($content, array $classes = []) : View
+    public static function Tag($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::TAG);
@@ -309,7 +311,7 @@ class Bulma
         return new View(HTML::span($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function Tags($content, array $classes = []) : View
+    public static function Tags($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::TAGS);
@@ -317,43 +319,46 @@ class Bulma
         return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function Title($content, $size = "3", array $classes = []) : View
+    public static function Title($content, $size = "3", array $classes = []): View
     {
         $content = (new View($content))->escape();
         $intSize = intval($size);
-        if ($intSize < 1 || $intSize > 6) {
+        if ($intSize < 1 || $intSize > 6)
+        {
             $intSize = 3;
         }
 
         array_unshift($classes, BulmaClass::TITLE);
-        $classes[] = "is-" . $intSize; 
-        
+        $classes[] = "is-" . $intSize;
+
         $class = implode(" ", $classes);
         $tag = 'h' . $intSize;
         return new View(HTML::$tag($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function Subtitle($content, $size = "5", array $classes = []) : View
+    public static function Subtitle($content, $size = "5", array $classes = []): View
     {
         $content = (new View($content))->escape();
         $intSize = intval($size);
-        if ($intSize < 1 || $intSize > 6) {
-            $intSize = 5; 
+        if ($intSize < 1 || $intSize > 6)
+        {
+            $intSize = 5;
         }
 
         array_unshift($classes, BulmaClass::SUBTITLE);
         $classes[] = "is-" . $intSize;
-        
+
         $class = implode(" ", $classes);
         $tag = 'h' . $intSize;
         return new View(HTML::$tag($content, ["class" => (new View($class))->escape()]));
     }
 
     // Components
-    public static function Breadcrumb($items, array $classes = [], array $attributes = []) : View
+    public static function Breadcrumb($items, array $classes = [], array $attributes = []): View
     {
         $listItems = "";
-        foreach ($items as $item) {
+        foreach ($items as $item)
+        {
             $itemText = (new View($item['text']))->escape();
             $itemLink = isset($item['href']) ? (new View($item['href']))->escape() : '#';
             $isActive = isset($item['active']) && $item['active'];
@@ -368,7 +373,7 @@ class Bulma
         return new View(HTML::nav($ul, $attributes));
     }
 
-    public static function Card($content, array $classes = []) : View
+    public static function Card($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::CARD);
@@ -376,7 +381,7 @@ class Bulma
         return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function CardHeader($content, array $classes = []) : View
+    public static function CardHeader($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::CARD_HEADER);
@@ -384,7 +389,7 @@ class Bulma
         return new View(HTML::header($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function CardHeaderTitle($title, array $classes = []) : View
+    public static function CardHeaderTitle($title, array $classes = []): View
     {
         $title = (new View($title))->escape();
         array_unshift($classes, BulmaClass::CARD_HEADER_TITLE);
@@ -392,13 +397,13 @@ class Bulma
         return new View(HTML::p($title, ["class" => (new View($class))->escape()]));
     }
 
-    public static function CardImage($src, $alt = "", array $containerClasses = [], array $imgAttributes = []) : View
+    public static function CardImage($src, $alt = "", array $containerClasses = [], array $imgAttributes = []): View
     {
         array_unshift($containerClasses, BulmaClass::CARD_IMAGE);
         return self::Image($src, $alt, $containerClasses, $imgAttributes);
     }
 
-    public static function CardContent($content, array $classes = []) : View
+    public static function CardContent($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::CARD_CONTENT);
@@ -406,7 +411,7 @@ class Bulma
         return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function CardFooter($content, array $classes = []) : View
+    public static function CardFooter($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::CARD_FOOTER);
@@ -414,19 +419,20 @@ class Bulma
         return new View(HTML::footer($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function CardFooterItem($content, $isLink = true, $href = '#', array $classes = []) : View
+    public static function CardFooterItem($content, $isLink = true, $href = '#', array $classes = []): View
     {
         $content = (new View($content))->escape();
         $href = (new View($href))->escape();
         array_unshift($classes, BulmaClass::CARD_FOOTER_ITEM);
         $class = implode(" ", $classes);
-        if ($isLink) {
+        if ($isLink)
+        {
             return new View(HTML::a($content, ["href" => $href, "class" => (new View($class))->escape()]));
         }
         return new View(HTML::p($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function Message($header, $body, array $classes = [], bool $closable = false) : View
+    public static function Message($header, $body, array $classes = [], bool $closable = false): View
     {
         $header = (new View($header))->escape();
         $body = (new View($body))->escape();
@@ -437,23 +443,24 @@ class Bulma
         return new View(HTML::article(View::concat($messageHeader, $messageBody), ["class" => (new View($class))->escape()]));
     }
 
-    public static function MessageHeader($content, bool $closable = false) : View
+    public static function MessageHeader($content, bool $closable = false): View
     {
         $content = (new View($content))->escape();
-        if ($closable) {
+        if ($closable)
+        {
             $deleteButton = HTML::button("", ["class" => BulmaClass::DELETE, "aria-label" => "delete"]);
             $content = View::concat($content, $deleteButton);
         }
         return new View(HTML::div($content, ["class" => BulmaClass::MESSAGE_HEADER]));
     }
 
-    public static function MessageBody($content) : View
+    public static function MessageBody($content): View
     {
         $content = (new View($content))->escape();
         return new View(HTML::div($content, ["class" => BulmaClass::MESSAGE_BODY]));
     }
 
-    public static function Modal($content, array $classes = []) : View
+    public static function Modal($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::MODAL);
@@ -464,7 +471,7 @@ class Bulma
         return new View(HTML::div(View::concat($background, $modalContent, $closeButton), ["class" => (new View($class))->escape()]));
     }
 
-    public static function ModalCard($head, $body, $foot, array $classes = []) : View
+    public static function ModalCard($head, $body, $foot, array $classes = []): View
     {
         $head = (new View($head))->escape();
         $body = (new View($body))->escape();
@@ -472,17 +479,17 @@ class Bulma
         array_unshift($classes, BulmaClass::MODAL);
         $class = implode(" ", $classes);
 
-        $cardHead = HTML::header(View::concat(HTML::p($head, ["class"=>BulmaClass::MODAL_CARD_TITLE]), HTML::button("",["class"=>BulmaClass::DELETE, "aria-label"=>"close"])), ["class"=>BulmaClass::MODAL_CARD_HEAD]);
-        $cardBody = HTML::section($body, ["class"=>BulmaClass::MODAL_CARD_BODY]);
-        $cardFoot = HTML::footer($foot, ["class"=>BulmaClass::MODAL_CARD_FOOT]);
+        $cardHead = HTML::header(View::concat(HTML::p($head, ["class" => BulmaClass::MODAL_CARD_TITLE]), HTML::button("", ["class" => BulmaClass::DELETE, "aria-label" => "close"])), ["class" => BulmaClass::MODAL_CARD_HEAD]);
+        $cardBody = HTML::section($body, ["class" => BulmaClass::MODAL_CARD_BODY]);
+        $cardFoot = HTML::footer($foot, ["class" => BulmaClass::MODAL_CARD_FOOT]);
 
-        $modalCard = HTML::div(View::concat($cardHead, $cardBody, $cardFoot), ["class"=>BulmaClass::MODAL_CARD]);
+        $modalCard = HTML::div(View::concat($cardHead, $cardBody, $cardFoot), ["class" => BulmaClass::MODAL_CARD]);
         $background = HTML::div("", ["class" => BulmaClass::MODAL_BACKGROUND]);
 
         return new View(HTML::div(View::concat($background, $modalCard), ["class" => (new View($class))->escape()]));
     }
 
-    public static function Dropdown($trigger, $content, array $classes = []) : View
+    public static function Dropdown($trigger, $content, array $classes = []): View
     {
         $trigger = (new View($trigger))->escape();
         $content = (new View($content))->escape();
@@ -498,7 +505,7 @@ class Bulma
         return new View(HTML::div(View::concat($triggerDiv, $menuDiv), ["class" => implode(" ", $classes)]));
     }
 
-    public static function Navbar($brand, $menu, array $classes = [], array $attributes = []) : View
+    public static function Navbar($brand, $menu, array $classes = [], array $attributes = []): View
     {
         $brand = (new View($brand))->escape();
         $menu = (new View($menu))->escape();
@@ -510,13 +517,13 @@ class Bulma
         return new View(HTML::nav($container, $attributes));
     }
 
-    public static function NavbarBrand($content) : View
+    public static function NavbarBrand($content): View
     {
         $content = (new View($content))->escape();
         return new View(HTML::div($content, ["class" => BulmaClass::NAVBAR_BRAND]));
     }
 
-    public static function NavbarBurger(string $target) : View
+    public static function NavbarBurger(string $target): View
     {
         $target = (new View($target))->escape();
         $spans = View::concat(HTML::span(['aria-hidden' => 'true']), HTML::span(['aria-hidden' => 'true']), HTML::span(['aria-hidden' => 'true']));
@@ -529,7 +536,7 @@ class Bulma
         ]));
     }
 
-    public static function NavbarMenu($startContent, $endContent, string $id, array $classes = []) : View
+    public static function NavbarMenu($startContent, $endContent, string $id, array $classes = []): View
     {
         $startContent = (new View($startContent))->escape();
         $endContent = (new View($endContent))->escape();
@@ -541,27 +548,28 @@ class Bulma
         return new View(HTML::div(View::concat($start, $end), ["id" => $id, "class" => (new View($class))->escape()]));
     }
 
-    public static function NavbarItem($content, $isLink = true, $href = '#', array $classes = []) : View
+    public static function NavbarItem($content, $isLink = true, $href = '#', array $classes = []): View
     {
         $content = (new View($content))->escape();
         $href = (new View($href))->escape();
         array_unshift($classes, BulmaClass::NAVBAR_ITEM);
         $class = implode(" ", $classes);
-        if($isLink) {
+        if ($isLink)
+        {
             return new View(HTML::a($content, ["href" => $href, "class" => (new View($class))->escape()]));
         }
         return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function NavbarLink($text, array $classes = []) : View
+    public static function NavbarLink($text, array $classes = []): View
     {
         $text = (new View($text))->escape();
         array_unshift($classes, BulmaClass::NAVBAR_LINK);
         $class = implode(" ", $classes);
         return new View(HTML::a($text, ["class" => (new View($class))->escape()]));
     }
-    
-    public static function NavbarDropdown($link, $content, array $classes = []) : View
+
+    public static function NavbarDropdown($link, $content, array $classes = []): View
     {
         $link = (new View($link))->escape();
         $content = (new View($content))->escape();
@@ -573,23 +581,23 @@ class Bulma
         return new View($item);
     }
 
-    public static function NavbarDivider(array $classes = []) : View
+    public static function NavbarDivider(array $classes = []): View
     {
         array_unshift($classes, BulmaClass::NAVBAR_DIVIDER);
         $class = implode(" ", $classes);
-        return new View(HTML::hr([],["class" => (new View($class))->escape()]));
+        return new View(HTML::hr([], ["class" => (new View($class))->escape()]));
     }
 
 
-    public static function Tabs($content, array $classes = []) : View
+    public static function Tabs($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::TABS);
         return new View(HTML::div($content, ["class" => implode(" ", $classes)]));
     }
-    
+
     // Form
-    public static function Field($content, array $classes = []) : View
+    public static function Field($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::FIELD);
@@ -597,7 +605,7 @@ class Bulma
         return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function Label($text, array $classes = []) : View
+    public static function Label($text, array $classes = []): View
     {
         $text = (new View($text))->escape();
         array_unshift($classes, BulmaClass::LABEL);
@@ -605,7 +613,7 @@ class Bulma
         return new View(HTML::label($text, ["class" => (new View($class))->escape()]));
     }
 
-    public static function Control($content, array $classes = []) : View
+    public static function Control($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::CONTROL);
@@ -613,14 +621,14 @@ class Bulma
         return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function Input(array $attributes = [], array $classes = []) : View
+    public static function Input(array $attributes = [], array $classes = []): View
     {
         array_unshift($classes, BulmaClass::INPUT);
         $attributes['class'] = implode(" ", $classes);
         return new View(HTML::input($attributes));
     }
 
-    public static function Textarea($content = "", array $attributes = [], array $classes = []) : View
+    public static function Textarea($content = "", array $attributes = [], array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::TEXTAREA);
@@ -628,7 +636,7 @@ class Bulma
         return new View(HTML::textarea($content, $attributes));
     }
 
-    public static function Select($options, array $attributes = [], array $classes = []) : View
+    public static function Select($options, array $attributes = [], array $classes = []): View
     {
         $options = (new View($options))->escape();
         array_unshift($classes, BulmaClass::SELECT);
@@ -637,7 +645,7 @@ class Bulma
         return new View(HTML::div($select, ["class" => (new View($class))->escape()]));
     }
 
-    public static function Checkbox($label, array $attributes = [], array $classes = []) : View
+    public static function Checkbox($label, array $attributes = [], array $classes = []): View
     {
         $label = (new View($label))->escape();
         array_unshift($classes, BulmaClass::CHECKBOX);
@@ -647,7 +655,7 @@ class Bulma
         return new View(HTML::label($content, ["class" => implode(" ", $classes)]));
     }
 
-    public static function Radio($label, array $attributes = [], array $classes = []) : View
+    public static function Radio($label, array $attributes = [], array $classes = []): View
     {
         $label = (new View($label))->escape();
         array_unshift($classes, BulmaClass::RADIO);
@@ -657,7 +665,7 @@ class Bulma
         return new View(HTML::label($content, ["class" => implode(" ", $classes)]));
     }
 
-    public static function Help($text, array $classes = []) : View
+    public static function Help($text, array $classes = []): View
     {
         $text = (new View($text))->escape();
         array_unshift($classes, BulmaClass::HELP);
@@ -665,7 +673,7 @@ class Bulma
         return new View(HTML::p($text, ["class" => (new View($class))->escape()]));
     }
 
-    public static function File($label, $inputName, array $classes = []) : View
+    public static function File($label, $inputName, array $classes = []): View
     {
         $label = (new View($label))->escape();
         $inputName = (new View($inputName))->escape();
@@ -680,11 +688,11 @@ class Bulma
         $classes[] = 'has-name';
 
         $labelElement = HTML::label(View::concat($fileInput, $fileCta, $fileNameSpan), ["class" => implode(" ", $classes)]);
-        
+
         return new View($labelElement);
     }
 
-    public static function Panel($content, array $classes = []) : View
+    public static function Panel($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::PANEL);
@@ -692,7 +700,7 @@ class Bulma
         return new View(HTML::nav($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function PanelHeading($content, array $classes = []) : View
+    public static function PanelHeading($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::PANEL_HEADING);
@@ -700,19 +708,20 @@ class Bulma
         return new View(HTML::p($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function PanelBlock($content, $isLink = false, $href = '#', array $classes = []) : View
+    public static function PanelBlock($content, $isLink = false, $href = '#', array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::PANEL_BLOCK);
         $class = implode(" ", $classes);
-        if ($isLink) {
+        if ($isLink)
+        {
             $href = (new View($href))->escape();
             return new View(HTML::a($content, ["href" => $href, "class" => (new View($class))->escape()]));
         }
         return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function PanelTabs($content, array $classes = []) : View
+    public static function PanelTabs($content, array $classes = []): View
     {
         $content = (new View($content))->escape();
         array_unshift($classes, BulmaClass::PANEL_TABS);
@@ -720,7 +729,7 @@ class Bulma
         return new View(HTML::div($content, ["class" => (new View($class))->escape()]));
     }
 
-    public static function PanelIcon($iconClasses, array $classes = []) : View
+    public static function PanelIcon($iconClasses, array $classes = []): View
     {
         $iconClasses = (new View($iconClasses))->escape();
         array_unshift($classes, BulmaClass::PANEL_ICON);
@@ -728,5 +737,4 @@ class Bulma
         $icon = HTML::i("", ["class" => $iconClasses, 'aria-hidden' => 'true']);
         return new View(HTML::span($icon, ["class" => (new View($class))->escape()]));
     }
-    
 }

@@ -14,10 +14,37 @@ class TestView extends Controller
     private function getComponentList()
     {
         return [
-            'Form', 'Buttons', 'Content', 'Image', 'Icon', 'Notification',
-            'Progress', 'Table', 'Tags', 'Title', 'Breadcrumb', 'Card',
-            'Message', 'Modal', 'Navbar', 'Panel', 'Tabs', 'Pagination',
-            'Menu', 'Hero', 'Footer', 'Columns', 'Box' , 'Radio', 'Dropdown', 'Level', 'File', 'Media', 'Tabs', 'Checkbox', 'Select'
+            'Form',
+            'Buttons',
+            'Content',
+            'Image',
+            'Icon',
+            'Notification',
+            'Progress',
+            'Table',
+            'Tags',
+            'Title',
+            'Breadcrumb',
+            'Card',
+            'Message',
+            'Modal',
+            'Navbar',
+            'Panel',
+            'Tabs',
+            'Pagination',
+            'Menu',
+            'Hero',
+            'Footer',
+            'Columns',
+            'Box',
+            'Radio',
+            'Dropdown',
+            'Level',
+            'File',
+            'Media',
+            'Tabs',
+            'Checkbox',
+            'Select'
         ];
     }
 
@@ -28,13 +55,16 @@ class TestView extends Controller
 
         $view_content = $content;
 
-        if ($title !== 'Test - Hero') {
-             $navbarBrand = Bulma::NavbarBrand(
+        if ($title !== 'Test - Hero')
+        {
+            $navbarBrand = Bulma::NavbarBrand(
                 Bulma::NavbarItem(HTML::h1('Mortingen TestView'), true, '/mortingen/TestView')
             );
             $navbarMenu = Bulma::NavbarMenu(
                 Bulma::NavbarItem('Home', true, '/mortingen/TestView'),
-                '', 'mainNavbar');
+                '',
+                'mainNavbar'
+            );
             $navbar = Bulma::Navbar($navbarBrand, $navbarMenu);
 
             $body = Bulma::Section(
@@ -56,8 +86,8 @@ class TestView extends Controller
     public function index()
     {
         $list = '';
-        sort($this->getComponentList());
-        foreach ($this->getComponentList() as $component) {
+        foreach ($this->getComponentList() as $component)
+        {
             $list .= '<li><a href="' . \App::getURIRoot() . '/TestView/' . strtolower($component) . '">' . $component . '</a></li>';
         }
         $ul = HTML::ul(new View($list));
@@ -114,9 +144,12 @@ class TestView extends Controller
             Bulma::Button('Outlined', [BulmaClass::IS_INFO, BulmaClass::IS_OUTLINED])
         ));
         $content = View::concat(
-            Bulma::Title('Standard Buttons'), $buttons_normal,
-            Bulma::Title('Button Sizes'), $buttons_sizes,
-            Bulma::Title('Outlined Buttons'), $buttons_outlined
+            Bulma::Title('Standard Buttons'),
+            $buttons_normal,
+            Bulma::Title('Button Sizes'),
+            $buttons_sizes,
+            Bulma::Title('Outlined Buttons'),
+            $buttons_outlined
         );
         $this->renderTestPage('Test - Buttons', $content);
     }
@@ -125,31 +158,31 @@ class TestView extends Controller
     public function image()
     {
         $image128 = Bulma::Image(
-            'https://cdn.cosmos.so/01f289d4-a6b1-470f-96c2-b8f5c852f26a?format=jpeg', 
-            '128x128 image', 
+            'https://cdn.cosmos.so/01f289d4-a6b1-470f-96c2-b8f5c852f26a?format=jpeg',
+            '128x128 image',
             [BulmaClass::IS_128X128]
         );
-        
+
         $image_square = Bulma::Image(
-            'https://cdn.cosmos.so/95766a25-f88a-4f6e-bc00-039f66f5759f.?format=jpeg', 
-            'Square image', 
+            'https://cdn.cosmos.so/95766a25-f88a-4f6e-bc00-039f66f5759f.?format=jpeg',
+            'Square image',
             [BulmaClass::IS_SQUARE]
         );
-        
+
         $content = Bulma::Cols(
             View::concat(
-            Bulma::Col(
-                View::concat(
-                Bulma::Title('128x128 Image'),
-                $image128
+                Bulma::Col(
+                    View::concat(
+                        Bulma::Title('128x128 Image'),
+                        $image128
+                    )
+                ),
+                Bulma::Col(
+                    View::concat(
+                        Bulma::Title('Square Image (Ratio)'),
+                        $image_square
+                    )
                 )
-            ),
-            Bulma::Col(
-                View::concat(
-                Bulma::Title('Square Image (Ratio)'),
-                $image_square
-                )
-            )
             )
         );
 
@@ -167,7 +200,7 @@ class TestView extends Controller
         );
         $this->renderTestPage('Test - Title', $content);
     }
-    
+
     // Test navbar
     public function navbar()
     {
@@ -186,7 +219,7 @@ class TestView extends Controller
             true,
             '/'
         );
-        $burger = Bulma::NavbarBurger($menuId); 
+        $burger = Bulma::NavbarBurger($menuId);
         $brand = Bulma::NavbarBrand(View::concat($brand_content, $burger));
 
         $menu_start = View::concat(Bulma::NavbarItem('Home', true, '#'), $dropdown);
@@ -194,14 +227,14 @@ class TestView extends Controller
             Bulma::ButtonLink('Sign up', '#', [BulmaClass::IS_PRIMARY]),
             Bulma::ButtonLink('Log in', '#', [BulmaClass::IS_LIGHT])
         )));
-        
+
         $menu = Bulma::NavbarMenu($menu_start, $menu_end, $menuId);
 
         $navbar_component = Bulma::Navbar($brand, $menu, [BulmaClass::IS_DARK]);
-        
+
         $this->renderTestPage('Test - Navbar (JS-Free)', $navbar_component);
     }
-    
+
     // Test panel
     public function panel()
     {
@@ -239,7 +272,7 @@ class TestView extends Controller
                 Bulma::NavbarItem(
                     Bulma::ButtonLink(
                         'Download',
-                        '#', 
+                        '#',
                         [BulmaClass::IS_LIGHT, BulmaClass::IS_OUTLINED]
                     )
                 ),
@@ -268,7 +301,7 @@ class TestView extends Controller
             HTML::li(HTML::a('Elements'))
         ));
         $tabs = HTML::div($tabs_list, [BulmaClass::TABS, BulmaClass::IS_BOXED, BulmaClass::IS_FULLWIDTH]);
-        
+
         $hero_foot = Bulma::HeroFoot(
             Bulma::Container($tabs, [BulmaClass::HAS_TEXT_CENTERED])
         );
@@ -285,7 +318,7 @@ class TestView extends Controller
 
         $this->response->addContent($full_html);
     }
-    
+
     // Test content
     public function content()
     {
@@ -360,13 +393,13 @@ class TestView extends Controller
             Bulma::Tag('Framework'),
             Bulma::Tag('PHP')
         ));
-        
+
         $tags2 = Bulma::Tags(View::concat(
             Bulma::Tag('Success', [BulmaClass::IS_SUCCESS]),
             Bulma::Tag('Large', [BulmaClass::IS_LARGE]),
             Bulma::Tag(View::concat('Deletable', Bulma::Button('', [BulmaClass::DELETE, BulmaClass::IS_SMALL])), [BulmaClass::IS_DANGER])
         ), [BulmaClass::HAS_ADDONS]);
-        
+
         $content = View::concat($tags1, $tags2);
         $this->renderTestPage('Test - Tags', $content);
     }
@@ -426,7 +459,7 @@ class TestView extends Controller
             )),
             [BulmaClass::IS_ACTIVE]
         );
-        
+
         $content = View::concat($modal1, HTML::br(), $modal2);
         $this->renderTestPage('Test - Modal', $content);
     }
@@ -463,15 +496,19 @@ class TestView extends Controller
         $tabs4 = Bulma::Tabs($list4, [BulmaClass::IS_TOGGLE, BulmaClass::IS_FULLWIDTH]);
 
         $content = View::concat(
-            Bulma::Title('Standard Tabs'), $tabs1,
-            Bulma::Title('Centered Tabs'), $tabs2,
-            Bulma::Title('Boxed Tabs with Icons'), $tabs3,
-            Bulma::Title('Toggle Tabs'), $tabs4
+            Bulma::Title('Standard Tabs'),
+            $tabs1,
+            Bulma::Title('Centered Tabs'),
+            $tabs2,
+            Bulma::Title('Boxed Tabs with Icons'),
+            $tabs3,
+            Bulma::Title('Toggle Tabs'),
+            $tabs4
         );
 
         $this->renderTestPage('Test - Tabs', $content);
     }
-    
+
     // Test pagination
     public function pagination()
     {
@@ -515,7 +552,7 @@ class TestView extends Controller
         $content = Bulma::Footer($footer_content);
         $this->renderTestPage('Test - Footer', $content);
     }
-    
+
     // Test columns
     public function columns()
     {
@@ -527,7 +564,7 @@ class TestView extends Controller
         ));
         $this->renderTestPage('Test - Columns', $content);
     }
-    
+
     // Test box
     public function box()
     {
@@ -613,13 +650,13 @@ class TestView extends Controller
             View::concat($level1_left, $level1_center, $level1_right),
             ''
         );
-        
+
         $level2_left = Bulma::LevelItem(Bulma::Title('My Awesome Blog', '3'));
         $level2_center = Bulma::LevelItem(
-            Bulma::Field(Bulma::Control(Bulma::Input(['type'=>'text', 'placeholder'=>'Find a post'])), [BulmaClass::HAS_ADDONS])
+            Bulma::Field(Bulma::Control(Bulma::Input(['type' => 'text', 'placeholder' => 'Find a post'])), [BulmaClass::HAS_ADDONS])
         );
         $level2_right = Bulma::LevelItem(Bulma::Button('Search', [BulmaClass::IS_PRIMARY]));
-        
+
         $level2 = Bulma::Level($level2_left, View::concat($level2_center, $level2_right));
 
         $content = View::concat(
@@ -662,7 +699,9 @@ class TestView extends Controller
         );
 
         $media_content_text = View::concat(
-            HTML::strong('Mr. Robot'), ' ', HTML::small('@babyrobot'),
+            HTML::strong('Mr. Robot'),
+            ' ',
+            HTML::small('@babyrobot'),
             HTML::br([]),
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.'
         );
@@ -677,7 +716,9 @@ class TestView extends Controller
             Bulma::Image('https://avatars.githubusercontent.com/u/141811535?v=4', 'Avatar', [BulmaClass::IS_64X64])
         );
         $reply_media_content_text = View::concat(
-            HTML::strong('Burak'), ' ', HTML::small('@erimburak'),
+            HTML::strong('Burak'),
+            ' ',
+            HTML::small('@erimburak'),
             HTML::br([]),
             'Donec sollicitudin, erat vel malessuadablandit, justoMauris.'
         );
@@ -708,19 +749,19 @@ class TestView extends Controller
         $field = Bulma::Field(View::concat(
             Bulma::Control(
                 Bulma::Checkbox(
-                    'Remember me', 
+                    'Remember me',
                     ['name' => 'remember_me', 'value' => '1']
                 )
             ),
             Bulma::Control(
                 Bulma::Checkbox(
-                    'I have read and accept the terms', 
+                    'I have read and accept the terms',
                     ['name' => 'terms', 'value' => 'accepted', 'checked' => true]
                 )
             ),
             Bulma::Control(
                 Bulma::Checkbox(
-                    'Send promotional emails (Disabled)', 
+                    'Send promotional emails (Disabled)',
                     ['name' => 'promo', 'value' => 'yes', 'disabled' => true]
                 )
             )
@@ -733,7 +774,7 @@ class TestView extends Controller
 
         $this->renderTestPage('Test - Checkbox', $content);
     }
-    
+
     // Test select
     public function select()
     {
@@ -776,5 +817,4 @@ class TestView extends Controller
 
         $this->renderTestPage('Test - Select Component', $content);
     }
-    
 }
