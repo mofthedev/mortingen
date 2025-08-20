@@ -158,6 +158,7 @@ class Request
 
     /**
      * Returns path segments as an array.
+     * Example: `/person/3/item/123` becomes `['person', '3', 'item', '123']`
      */
     public static function getArgs(): array
     {
