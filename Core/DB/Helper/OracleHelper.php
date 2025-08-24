@@ -41,4 +41,11 @@ class OracleHelper extends BaseHelper
         // Oracle prefers uppercase for unquoted identifiers
         return "CREATE TABLE \"" . strtoupper($table) . "\" (\n    {$cols}\n){$mod}";
     }
+
+    public function addForeignKeyQuery(string $table, string $column, string $referencedTable, string $referencedColumn, string $onDelete = 'CASCADE', string $onUpdate = 'CASCADE'): string
+    {
+        $fkName = "{$table}_{$column}_fk";
+        // Oracle prefers uppercase for unquoted identifiers
+        return "ALTER TABLE \"" . strtoupper($table) . "\" ADD CONSTRAINT \"" . strtoupper($fkName) . "\" FOREIGN KEY (\"" . strtoupper($column) . "\") REFERENCES \"" . strtoupper($referencedTable) . "\" (\"" . strtoupper($referencedColumn) . "\") ON DELETE {$onDelete} ON UPDATE {$onUpdate}";
+    }
 }

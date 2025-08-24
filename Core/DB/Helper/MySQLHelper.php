@@ -41,7 +41,16 @@ class MySQLHelper extends BaseHelper
     {
         $mod = $tableModifiers ?? static::$defaultTableModifiers;
         $mod = $mod ? " " . trim($mod) : "";
-        $cols = implode(",\n    ", $columns);
-        return "CREATE TABLE `{$table}` (\n    {$cols}\n){$mod};";
+        $cols = implode(",
+    ", $columns);
+        return "CREATE TABLE `{$table}` (
+    {$cols}
+){$mod};";
+    }
+
+    public function addForeignKeyQuery(string $table, string $column, string $referencedTable, string $referencedColumn, string $onDelete = 'CASCADE', string $onUpdate = 'CASCADE'): string
+    {
+        $fkName = "{$table}_{$column}_fk";
+        return "ALTER TABLE `{$table}` ADD CONSTRAINT `{$fkName}` FOREIGN KEY (`{$column}`) REFERENCES `{$referencedTable}` (`{$referencedColumn}`) ON DELETE {$onDelete} ON UPDATE {$onUpdate}";
     }
 }

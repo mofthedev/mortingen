@@ -2,21 +2,27 @@
 
 namespace DB;
 
-class Column extends Identifier
+class Column
 {
-    private string $name;
-    private string $table;
+    private string $name = '';
+    private string $table = '';
+    private ?Identifier $identifier = null;
 
     public function __construct(
         private string $type,      // e.g. 'BIGINT', 'VARCHAR(255)', 'TEXT'
         private string $definition = '' // e.g. 'UNSIGNED NOT NULL AUTO_INCREMENT', or any extra SQL
     )
     {
+
     }
 
     public function setName(string $name)
     {
         $this->name = $name;
+        // Update the identifier if it exists
+        if (!empty($this->table)) {
+            $this->identifier = Identifier::{$this->table . '.' . $name}();
+        }
     }
 
     public function getName(): string
@@ -27,6 +33,10 @@ class Column extends Identifier
     public function setTable(string $table)
     {
         $this->table = $table;
+        // Create or update the identifier
+        if (!empty($this->name)) {
+            $this->identifier = Identifier::{$table . '.' . $this->name}();
+        }
     }
 
     public function getTable(): string
@@ -49,11 +59,17 @@ class Column extends Identifier
      */
     public function getFullDefinition(): string
     {
+        if (empty($this->name)) {
+            return '';
+        }
         return trim($this->name . ' ' . $this->type . ' ' . $this->definition);
     }
 
     public function __toString(): string
     {
-        return (string) ($this->table . '.' . $this->name);
+        if (!$this->identifier && !empty($this->table) && !empty($this->name)) {
+            $this->identifier = Identifier::{$this->table . '.' . $this->name}();
+        }
+        return $this->identifier ? (string) $this->identifier : '';
     }
 }
