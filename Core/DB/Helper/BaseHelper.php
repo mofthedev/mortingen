@@ -34,9 +34,5 @@ abstract class BaseHelper
 
     abstract public function addColumnQuery(string $table, string $column, string $type, string $definitions = ''): string;
 
-    public function addForeignKeyQuery(string $table, string $column, string $referencedTable, string $referencedColumn, string $onDelete = 'CASCADE', string $onUpdate = 'CASCADE'): string
-    {
-        // Default implementation for databases that don't support foreign keys
-        return '';
-    }
+    abstract public function addForeignKeyQuery(string $table, string $column, string $referencedTable, string $referencedColumn, string $onDelete = 'CASCADE', string $onUpdate = 'CASCADE'): string;
 }
